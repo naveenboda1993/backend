@@ -4,6 +4,8 @@ const moment = require('moment');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 const Helpers = require('../helpers/helpers');
+const Gym = require('../models/gymModels');
+
 
 
 
@@ -433,6 +435,7 @@ module.exports = {
     async userrole(req, res){
         res.status(httpStatus.OK).json({role: req.user.role});
     },
+    // getting gymownrs
     async GetGymOwner(req, res) {
         await User.find({role:"gymowner"})
             .populate('posts.postId')
@@ -447,6 +450,7 @@ module.exports = {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
     },
+    // getting trainers
     async GetTrainer(req, res) {
         await User.find({role:"trainer"})
             .populate('posts.postId')
@@ -457,6 +461,64 @@ module.exports = {
             .populate('notifications.senderId')
             .then((result) => {
                 res.status(httpStatus.OK).json({ message: 'trainer', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
+    // creating gyms/ gym profile
+    async CreateGymProfile(req, res) {
+        console.log(req.body);
+        const body = {
+            gymname: req.body.gymname,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber,
+            user: req.user._id,
+        };
+        // console.log(body);
+        Gym.create(body)
+        .then((gym) => {
+            res.status(httpStatus.OK).json({ message: 'Gym created', gym });}
+            ) 
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
+    // updating gyms / gym profiles
+    async UpdateGymProfile(req, res) {
+        console.log(req.body);
+        const body = {
+            gymname: req.body.gymname,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber,
+            user: req.user._id,
+        };
+        // console.log(body);
+        await Gym.updateMany(
+            {
+                _id: req.body._id,
+               
+            },{
+                gymname: req.body.gymname,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber
+            }
+        )
+        .then((gym) => {
+            res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });}
+            ) 
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
+    // getting all gyms
+    async GetAllGyms(req, res) {
+        await Gym.find()
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'All gyms', result });
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
