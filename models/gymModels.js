@@ -18,5 +18,4 @@ const gymSchema= mongoose.Schema({
     ], 
 });
 
-
 module.exports = mongoose.model('Gym', gymSchema);
