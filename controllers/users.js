@@ -7,8 +7,6 @@ const Helpers = require('../helpers/helpers');
 const Gym = require('../models/gymModels');
 
 
-
-
 module.exports = {
 
     async Gymowner(req, res) {
@@ -27,7 +25,7 @@ module.exports = {
                 .required(),
             age: Joi.string()
                 .required(),
-                address: Joi.string()
+            address: Joi.string()
                 .min(1)
                 .max(50)
                 .required(),
@@ -116,7 +114,7 @@ module.exports = {
                 username: Helpers.firstUppercase(value.username),
                 email: Helpers.lowerCase(value.email),
                 phonenumber: req.body.phonenumber,
-                age:req.body.age,
+                age: req.body.age,
                 address: req.body.address,
                 language: req.body.language,
                 role: 'gymowner',
@@ -266,7 +264,7 @@ module.exports = {
                 username: Helpers.firstUppercase(value.username),
                 email: Helpers.lowerCase(value.email),
                 phonenumber: req.body.phonenumber,
-                age:req.body.age,
+                age: req.body.age,
                 address: req.body.address,
                 language: req.body.language,
                 role: 'trainer',
@@ -432,12 +430,12 @@ module.exports = {
 
     },
     //getting user role from authtoken
-    async userrole(req, res){
-        res.status(httpStatus.OK).json({role: req.user.role});
+    async userrole(req, res) {
+        res.status(httpStatus.OK).json({ role: req.user.role });
     },
     // getting gymownrs
     async GetGymOwner(req, res) {
-        await User.find({role:"gymowner"})
+        await User.find({ role: "gymowner" })
             .populate('posts.postId')
             .populate('following.userFollowed')
             .populate('followers.follower')
@@ -452,7 +450,7 @@ module.exports = {
     },
     // getting trainers
     async GetTrainer(req, res) {
-        await User.find({role:"trainer"})
+        await User.find({ role: "trainer" })
             .populate('posts.postId')
             .populate('following.userFollowed')
             .populate('followers.follower')
@@ -468,21 +466,31 @@ module.exports = {
     // creating gyms/ gym profile
     async CreateGymProfile(req, res) {
         console.log(req.body);
+        const defaulttimings = [{ id: 1, starting: "10:30 AM", ending: "09:00 PM" }];
+        const workinghours = [{ day: 'monday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings }];
+        workinghours.push({ day: 'tuesday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'wednesday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'thursday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'friday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'saturday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'sunday',duration:'10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
         const body = {
             gymname: req.body.gymname,
             email: req.body.email,
             phonenumber: req.body.phonenumber,
             user: req.user._id,
-            gymtag:req.body.tag,
-            services:req.body.services,
-            gymdec:req.body.discripition,
-            address:req.body.address,
+            gymtag: req.body.tag,
+            services: req.body.services,
+            gymdec: req.body.discripition,
+            address: req.body.address,
+            workinghours: workinghours
         };
         // console.log(body);
         Gym.create(body)
-        .then((gym) => {
-            res.status(httpStatus.OK).json({ message: 'Gym created', gym });}
-            ) 
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Gym created', gym });
+            }
+            )
             .catch(err => {
                 res
                     .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -502,16 +510,17 @@ module.exports = {
         await Gym.updateMany(
             {
                 _id: req.body._id,
-               
-            },{
-                gymname: req.body.gymname,
-                email: req.body.email,
-                phonenumber: req.body.phonenumber
-            }
+
+            }, {
+            gymname: req.body.gymname,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber
+        }
         )
-        .then((gym) => {
-            res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });}
-            ) 
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+            }
+            )
             .catch(err => {
                 res
                     .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -530,7 +539,7 @@ module.exports = {
     // getting  GetOwnerGyms
     async GetOwnerGyms(req, res) {
         // user: req.user._id,
-        await Gym.find({user:req.user._id})
+        await Gym.find({ user: req.user._id })
             .then((result) => {
                 res.status(httpStatus.OK).json({ message: 'All gyms', result });
             }).catch(err => {

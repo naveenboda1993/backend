@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 // const Gym = require('../models/gymModels')
 
-
-
-const gymSchema= mongoose.Schema({
+const gymmodel={
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     gymname: {type: String},
     gymdec: {type: String,default:''},
@@ -20,7 +18,23 @@ const gymSchema= mongoose.Schema({
         imgId:{type: String, default:''},
         imgVersion:{type: String, default:''}
         }
-    ], 
-});
+    ],
+    workinghours:[{
+        day: {type: String},
+        duration: {type: String},
+        multiplebookings: {type: String},
+        numberofbookings: {type: String},
+        status: {type: String},
+        slots: [
+            {
+                id:{type:String},
+                starting: {type:String},
+                ending: {type:String},
+            }
+        ],
+    }] 
+}
+
+const gymSchema= mongoose.Schema(gymmodel);
 
 module.exports = mongoose.model('Gym', gymSchema);
