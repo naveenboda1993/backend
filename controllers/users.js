@@ -473,6 +473,10 @@ module.exports = {
             email: req.body.email,
             phonenumber: req.body.phonenumber,
             user: req.user._id,
+            gymtag:req.body.tag,
+            services:req.body.services,
+            gymdec:req.body.discripition,
+            address:req.body.address,
         };
         // console.log(body);
         Gym.create(body)
