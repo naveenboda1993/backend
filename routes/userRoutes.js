@@ -25,6 +25,8 @@ router.get('/updategymprofile', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfil
 // getting all gyms
 router.get('/getallgyms', AuthHelper.VerifyToken, UserCtrl.GetAllGyms);
 
+router.get('/getownergyms', AuthHelper.VerifyToken, UserCtrl.GetOwnerGyms);
+
 
 
 module.exports = router;

@@ -523,5 +523,15 @@ module.exports = {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
     },
+    // getting  GetOwnerGyms
+    async GetOwnerGyms(req, res) {
+        // user: req.user._id,
+        await Gym.find({user:req.user._id})
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'All gyms', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
 
 };
