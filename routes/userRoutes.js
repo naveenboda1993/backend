@@ -22,6 +22,7 @@ router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
 router.post('/creategymprofile', AuthHelper.VerifyToken, UserCtrl.CreateGymProfile);
 // update gym profile
 router.get('/updategymprofile', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfile);
+router.post('/updategymworkinghours', AuthHelper.VerifyToken, UserCtrl.UpdateGymWorkingHours);
 // getting all gyms
 router.get('/getallgyms', AuthHelper.VerifyToken, UserCtrl.GetAllGyms);
 
