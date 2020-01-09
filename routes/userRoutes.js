@@ -19,6 +19,7 @@ router.get('/userrole', AuthHelper.VerifyToken, UserCtrl.userrole);
 router.get('/getgymowner', AuthHelper.VerifyToken, UserCtrl.GetGymOwner);
 router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
 // gym profile create
+router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile);
 router.post('/creategymprofile', AuthHelper.VerifyToken, UserCtrl.CreateGymProfile);
 // update gym profile
 router.get('/updategymprofile', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfile);

@@ -11,8 +11,8 @@ const gymmodel={
     address: {type: String},
     email: {type: String},
     phonenumber:{type:Number},
-    picVersion:{type: String, default :'1569647029'},
-    picId:{type: String, default:'default-profile-1_auxokg.png'},
+    picVersion:{type: String, default :'1578562408'},
+    picId:{type: String, default:'gym-default-image.jpg'},
     images:[
         {
         imgId:{type: String, default:''},
