@@ -26,6 +26,9 @@ router.get('/updategymprofile', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfil
 router.get('/getallgyms', AuthHelper.VerifyToken, UserCtrl.GetAllGyms);
 
 router.get('/getownergyms', AuthHelper.VerifyToken, UserCtrl.GetOwnerGyms);
+// Deleting Gyms
+router.post('/deletegym', AuthHelper.VerifyToken, UserCtrl.DeleteGym);
+
 
 
 

@@ -47,6 +47,11 @@ const userSchema= mongoose.Schema({
     ], 
     role:{type: String, default:''},
     phonenumber:{type: String, default:''},
+    certification:{ type: String, default:''},
+    specialization:{ type: String, default:''},
+    tagline:{type: String, default:''},
+    experience:{ type: String, default:''},
+    id:{ type: String, default:''},
     city:{type: String, default:''},
     country:{type: String, default:''}
 });

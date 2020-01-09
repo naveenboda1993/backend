@@ -27,7 +27,7 @@ module.exports = {
                 .required(),
             age: Joi.string()
                 .required(),
-                address: Joi.string()
+            address: Joi.string()
                 .min(1)
                 .max(50)
                 .required(),
@@ -116,7 +116,7 @@ module.exports = {
                 username: Helpers.firstUppercase(value.username),
                 email: Helpers.lowerCase(value.email),
                 phonenumber: req.body.phonenumber,
-                age:req.body.age,
+                age: req.body.age,
                 address: req.body.address,
                 language: req.body.language,
                 role: 'gymowner',
@@ -177,9 +177,17 @@ module.exports = {
                 .min(1)
                 .max(50)
                 .required(),
+            certification: Joi.string()
+                .required(),
+            specialization: Joi.string()
+                .required(),
+            experience: Joi.string()
+                .required(),
+            tagline: Joi.string()
+                .required(),
+            id: Joi.string()
+                .required(),
             language: Joi.string()
-                .min(1)
-                .max(20)
                 .required(),
             // role: Joi.string().required(),
 
@@ -217,7 +225,6 @@ module.exports = {
             return res
                 .status(httpStatus.CONFLICT)
                 .json({ message: 'Username already exist' });
-
         }
         const userAge = await User.findOne({
             age: Helpers.lowerCase(req.body.age)
@@ -226,7 +233,6 @@ module.exports = {
             return res
                 .status(httpStatus.CONFLICT)
                 .json({ message: 'age is must' });
-
         }
         const userAddress = await User.findOne({
             address: Helpers.lowerCase(req.body.address)
@@ -235,7 +241,6 @@ module.exports = {
             return res
                 .status(httpStatus.CONFLICT)
                 .json({ message: 'address is required' });
-
         }
         const userLanguage = await User.findOne({
             language: Helpers.lowerCase(req.body.language)
@@ -244,7 +249,46 @@ module.exports = {
             return res
                 .status(httpStatus.CONFLICT)
                 .json({ message: 'languages are required' });
-
+        }
+        const userCertification = await User.findOne({
+            certification: Helpers.lowerCase(req.body.certification)
+        });
+        if (userCertification) {
+            return res
+                .status(httpStatus.CONFLICT)
+                .json({ message: 'Certifications are required' });
+        }
+        const userSpecialization = await User.findOne({
+            specialization: Helpers.lowerCase(req.body.specialization)
+        });
+        if (userSpecialization) {
+            return res
+                .status(httpStatus.CONFLICT)
+                .json({ message: 'Specialization are required' });
+        }
+        const userTagline = await User.findOne({
+            tagline: Helpers.lowerCase(req.body.tagline)
+        });
+        if (userTagline) {
+            return res
+                .status(httpStatus.CONFLICT)
+                .json({ message: 'Tagline is required' });
+        }
+        const userExperience = await User.findOne({
+            experience: Helpers.lowerCase(req.body.experience)
+        });
+        if (userExperience) {
+            return res
+                .status(httpStatus.CONFLICT)
+                .json({ message: 'Experience is required' });
+        }
+        const userId = await User.findOne({
+            id: Helpers.lowerCase(req.body.id)
+        });
+        if (userId) {
+            return res
+                .status(httpStatus.CONFLICT)
+                .json({ message: 'Trainer ID is required' });
         }
         // const role = await User.findOne({
         //     role: Helpers.firstUppercase(req.body.role)
@@ -266,8 +310,13 @@ module.exports = {
                 username: Helpers.firstUppercase(value.username),
                 email: Helpers.lowerCase(value.email),
                 phonenumber: req.body.phonenumber,
-                age:req.body.age,
+                age: req.body.age,
                 address: req.body.address,
+                certification:req.body.certification,
+                specialization:req.body.specialization,
+                tagline:req.body.tagline,
+                experience:req.body.experience,
+                id:req.body.id,
                 language: req.body.language,
                 role: 'trainer',
                 password: hash
@@ -432,12 +481,12 @@ module.exports = {
 
     },
     //getting user role from authtoken
-    async userrole(req, res){
-        res.status(httpStatus.OK).json({role: req.user.role});
+    async userrole(req, res) {
+        res.status(httpStatus.OK).json({ role: req.user.role });
     },
     // getting gymownrs
     async GetGymOwner(req, res) {
-        await User.find({role:"gymowner"})
+        await User.find({ role: "gymowner" })
             .populate('posts.postId')
             .populate('following.userFollowed')
             .populate('followers.follower')
@@ -452,7 +501,7 @@ module.exports = {
     },
     // getting trainers
     async GetTrainer(req, res) {
-        await User.find({role:"trainer"})
+        await User.find({ role: "trainer" })
             .populate('posts.postId')
             .populate('following.userFollowed')
             .populate('followers.follower')
@@ -473,16 +522,17 @@ module.exports = {
             email: req.body.email,
             phonenumber: req.body.phonenumber,
             user: req.user._id,
-            gymtag:req.body.tag,
-            services:req.body.services,
-            gymdec:req.body.discripition,
-            address:req.body.address,
+            gymtag: req.body.tag,
+            services: req.body.services,
+            gymdec: req.body.discripition,
+            address: req.body.address,
         };
         // console.log(body);
         Gym.create(body)
-        .then((gym) => {
-            res.status(httpStatus.OK).json({ message: 'Gym created', gym });}
-            ) 
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Gym created', gym });
+            }
+            )
             .catch(err => {
                 res
                     .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -492,6 +542,11 @@ module.exports = {
     // updating gyms / gym profiles
     async UpdateGymProfile(req, res) {
         console.log(req.body);
+        try {
+            
+        } catch (error) {
+            
+        }
         const body = {
             gymname: req.body.gymname,
             email: req.body.email,
@@ -499,19 +554,25 @@ module.exports = {
             user: req.user._id,
         };
         // console.log(body);
-        await Gym.updateMany(
+         
+         let result = await Gym.updateMany(
             {
-                _id: req.body._id,
-               
-            },{
-                gymname: req.body.gymname,
-                email: req.body.email,
-                phonenumber: req.body.phonenumber
+                
+                workinghours:{
+                    _id:req.workinghours
+                }
+            }, {
+            
+            workinghours:{
+                duration:duration
             }
+
+        }
         )
-        .then((gym) => {
-            res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });}
-            ) 
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+            }
+            )
             .catch(err => {
                 res
                     .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -530,12 +591,26 @@ module.exports = {
     // getting  GetOwnerGyms
     async GetOwnerGyms(req, res) {
         // user: req.user._id,
-        await Gym.find({user:req.user._id})
+        await Gym.find({ user: req.user._id })
             .then((result) => {
                 res.status(httpStatus.OK).json({ message: 'All gyms', result });
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
     },
+    // Deleting Gyms
+    async DeleteGym(req, res) {
+        // ({_id:req.params})
+        console.log(req.body);
+        await Gym.deleteMany({ email: req.body.email })
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'Deleted', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
+    // Updating the trainer profile
+    async UpdateTrainerPofile(req, res){
 
+}
 };
