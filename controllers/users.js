@@ -7,8 +7,6 @@ const Helpers = require('../helpers/helpers');
 const Gym = require('../models/gymModels');
 
 
-
-
 module.exports = {
 
     async Gymowner(req, res) {
@@ -312,11 +310,11 @@ module.exports = {
                 phonenumber: req.body.phonenumber,
                 age: req.body.age,
                 address: req.body.address,
-                certification:req.body.certification,
-                specialization:req.body.specialization,
-                tagline:req.body.tagline,
-                experience:req.body.experience,
-                id:req.body.id,
+                certification: req.body.certification,
+                specialization: req.body.specialization,
+                tagline: req.body.tagline,
+                experience: req.body.experience,
+                id: req.body.id,
                 language: req.body.language,
                 role: 'trainer',
                 password: hash
@@ -517,6 +515,14 @@ module.exports = {
     // creating gyms/ gym profile
     async CreateGymProfile(req, res) {
         console.log(req.body);
+        const defaulttimings = [{ id: 1, starting: "10:30 AM", ending: "09:00 PM" }];
+        const workinghours = [{ day: 'monday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings }];
+        workinghours.push({ day: 'tuesday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'wednesday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'thursday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'friday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'saturday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+        workinghours.push({ day: 'sunday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
         const body = {
             gymname: req.body.gymname,
             email: req.body.email,
@@ -526,6 +532,7 @@ module.exports = {
             services: req.body.services,
             gymdec: req.body.discripition,
             address: req.body.address,
+            workinghours: workinghours
         };
         // console.log(body);
         Gym.create(body)
@@ -543,9 +550,9 @@ module.exports = {
     async UpdateGymProfile(req, res) {
         console.log(req.body);
         try {
-            
+
         } catch (error) {
-            
+
         }
         const body = {
             gymname: req.body.gymname,
@@ -554,19 +561,16 @@ module.exports = {
             user: req.user._id,
         };
         // console.log(body);
-         
-         let result = await Gym.updateMany(
-            {
-                
-                workinghours:{
-                    _id:req.workinghours
-                }
-            }, {
-            
-            workinghours:{
-                duration:duration
-            }
 
+        let result = await Gym.updateMany(
+            {
+
+                _id: req.body._id,
+
+            }, {
+            gymname: req.body.gymname,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber
         }
         )
             .then((gym) => {
@@ -610,7 +614,36 @@ module.exports = {
             })
     },
     // Updating the trainer profile
-    async UpdateTrainerPofile(req, res){
+    async UpdateTrainerPofile(req, res) {
 
-}
+    },
+    async UpdateGymWorkingHours(req, res) {
+        console.log(req.body);
+
+        // console.log(body);
+        await Gym.updateMany(
+            {
+                "workinghours._id": req.body.gym.selectdatevalue._id
+            },
+            {
+                $set:
+                {
+                    "workinghours.$.duration": req.body.gym.selectdatevalue.duration,
+                    "workinghours.$.multiplebookings": req.body.gym.selectdatevalue.multiplebookings,
+                    "workinghours.$.numberofbookings": req.body.gym.selectdatevalue.numberofbookings,
+                    "workinghours.$.status": req.body.gym.selectdatevalue.status,
+                    "workinghours.$.slots": req.body.gym.timings,
+                }
+            }
+        )
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
 };
