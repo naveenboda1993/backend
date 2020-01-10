@@ -320,16 +320,16 @@ module.exports = {
                 password: hash
             };//new object is created, created all those mentioned 
             User.create(body)//mongoose create method
-                .then((user) => {
+                .then((userResult) => {
                     Trainer.create({
                         certification: req.body.certification,
                         specialization: req.body.specialization,
                         tagline: req.body.tagline,
                         experience: req.body.experience,
-                        user: user.id,
+                        user: userResult._id,
                         id: req.body.id,
                     }).then((trainer) => {
-                        res.status(httpStatus.OK).json({ message: 'Trainer created', user, trainer });
+                        res.status(httpStatus.OK).json({ message: 'Trainer created', user: userResult, trainer });
 
                     })
                 }
@@ -627,9 +627,9 @@ module.exports = {
     },
     // getting only one trainer
     async GetTrainerOne(req, res) {
-        await User.findOne({ _id: req.user._id })
+        await User.findOne({ _id: req.params.id })
             .then((user) => {
-                 Trainer.findOne({ user: req.user._id })
+                 Trainer.findOne({ user: req.params.id })
                 .then((tranier) => {
                     res.status(httpStatus.OK).json({ message: 'one trainer',  user, tranier });
                 }).catch(err => {
