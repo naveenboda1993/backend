@@ -12,4 +12,7 @@ const AuthCtrl = require('../controllers/auth.js');
 router.post('/register', AuthCtrl.CreateUser); //cu is method which will be in auth
 router.post('/login', AuthCtrl.LoginUser);
 
+
+router.get('/getgyms', AuthCtrl.GetGyms);
+
 module.exports= router;

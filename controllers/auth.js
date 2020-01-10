@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModels');
+const Gym = require('../models/gymModels');
 const Helpers = require('../helpers/helpers');
 const dbConfig = require('../config/secret');
 
@@ -125,5 +126,13 @@ module.exports = {
                 return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occured' });
             })
 
+    },
+    async GetGyms(req,res){
+        await Gym.find()        
+        .then((result) => {
+            res.status(HttpStatus.OK).json({ message: 'gyms', result });
+        }).catch(err => {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+        })
     }
 };

@@ -16,7 +16,8 @@ const gymmodel={
     images:[
         {
         imgId:{type: String, default:''},
-        imgVersion:{type: String, default:''}
+        imgVersion:{type: String, default:''},
+        status:{type: String, default:'visible'}
         }
     ],
     workinghours:[{
