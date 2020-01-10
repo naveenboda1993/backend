@@ -17,10 +17,10 @@ router.post('/user/view-profile', AuthHelper.VerifyToken, UserCtrl.ProfileView);
 router.post('/change-password', AuthHelper.VerifyToken, UserCtrl.ChangePassword);
 router.get('/userrole', AuthHelper.VerifyToken, UserCtrl.userrole);
 router.get('/getgymowner', AuthHelper.VerifyToken, UserCtrl.GetGymOwner);
-// getting all trainers
+// getting role trainers from usersdb
 router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
-// getting onr trianer
-router.get('/gettrainerone', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
+// getting one trianer 
+router.get('/gettrainerone/:id', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
 
 // gym profile create
 router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile);

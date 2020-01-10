@@ -627,12 +627,18 @@ module.exports = {
     },
     // getting only one trainer
     async GetTrainerOne(req, res) {
-        await User.find({ _id: req.user._id })
-            .then((result) => {
-                res.status(httpStatus.OK).json({ message: 'one trainer', result });
+        await User.findOne({ _id: req.params.id })
+            .then((user) => {
+                 Trainer.findOne({ user: req.params.id })
+                .then((tranier) => {
+                    res.status(httpStatus.OK).json({ message: 'one trainer',  user, tranier });
+                }).catch(err => {
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error1 Occurred' });
+                })               
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
+       
     },
     // Deleting Gyms
     async DeleteGym(req, res) {
