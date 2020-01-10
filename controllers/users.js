@@ -5,6 +5,7 @@ const Joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 const Helpers = require('../helpers/helpers');
 const Gym = require('../models/gymModels');
+const Trainer = require('../models/trainerModels');
 
 
 module.exports = {
@@ -159,135 +160,135 @@ module.exports = {
     },
     async Trainer(req, res) {
         console.log(req.body);
-        const schema = Joi.object().keys({
-            username: Joi.string()
-                .min(3)
-                .max(30)
-                .required(),
-            phonenumber: Joi.string().min(3)
-                .max(30).required(),
-            email: Joi.string()
-                .email()
-                .required(),
-            age: Joi.string()
-                .required(),
-            address: Joi.string()
-                .min(1)
-                .max(50)
-                .required(),
-            certification: Joi.string()
-                .required(),
-            specialization: Joi.string()
-                .required(),
-            experience: Joi.string()
-                .required(),
-            tagline: Joi.string()
-                .required(),
-            id: Joi.string()
-                .required(),
-            language: Joi.string()
-                .required(),
-            // role: Joi.string().required(),
+        // const schema = Joi.object().keys({
+        //     username: Joi.string()
+        //         .min(3)
+        //         .max(30)
+        //         .required(),
+        //     phonenumber: Joi.string().min(3)
+        //         .max(30).required(),
+        //     email: Joi.string()
+        //         .email()
+        //         .required(),
+        //     age: Joi.string()
+        //         .required(),
+        //     address: Joi.string()
+        //         .min(1)
+        //         .max(50)
+        //         .required(),
+        //     certification: Joi.string()
+        //         .required(),
+        //     specialization: Joi.string()
+        //         .required(),
+        //     experience: Joi.string()
+        //         .required(),
+        //     tagline: Joi.string()
+        //         .required(),
+        //     id: Joi.string()
+        //         .required(),
+        //     language: Joi.string()
+        //         .required(),
+        //     // role: Joi.string().required(),
 
-            password: Joi.string()
-                .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
-        });
+        //     password: Joi.string()
+        //         .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
+        // });
 
 
-        const { error, value } = schema.validate(req.body);
-        // console.log(value);
-        if (error && error.details) {
-            return res
-                .status(httpStatus.BAD_REQUEST)
-                .json({ issucess: false, msg: error.details });
-        }
+        // const { error, value } = schema.validate(req.body);
+        // // console.log(value);
+        // if (error && error.details) {
+        //     return res
+        //         .status(httpStatus.BAD_REQUEST)
+        //         .json({ issucess: false, msg: error.details });
+        // }
         // else{
 
         //     return res.status(500).json({issucess:true,message:"successfully email validate" });
         // }
 
-        const userEmail = await User.findOne({
-            email: Helpers.lowerCase(req.body.email)
-        });
-        if (userEmail) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Email already exist' });
+        // const userEmail = await User.findOne({
+        //     email: Helpers.lowerCase(req.body.email)
+        // });
+        // if (userEmail) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Email already exist' });
 
-        }
+        // }
 
-        const userName = await User.findOne({
-            username: Helpers.firstUppercase(req.body.username)
-        });
-        if (userName) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Username already exist' });
-        }
-        const userAge = await User.findOne({
-            age: Helpers.lowerCase(req.body.age)
-        });
-        if (userAge) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'age is must' });
-        }
-        const userAddress = await User.findOne({
-            address: Helpers.lowerCase(req.body.address)
-        });
-        if (userAddress) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'address is required' });
-        }
-        const userLanguage = await User.findOne({
-            language: Helpers.lowerCase(req.body.language)
-        });
-        if (userLanguage) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'languages are required' });
-        }
-        const userCertification = await User.findOne({
-            certification: Helpers.lowerCase(req.body.certification)
-        });
-        if (userCertification) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Certifications are required' });
-        }
-        const userSpecialization = await User.findOne({
-            specialization: Helpers.lowerCase(req.body.specialization)
-        });
-        if (userSpecialization) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Specialization are required' });
-        }
-        const userTagline = await User.findOne({
-            tagline: Helpers.lowerCase(req.body.tagline)
-        });
-        if (userTagline) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Tagline is required' });
-        }
-        const userExperience = await User.findOne({
-            experience: Helpers.lowerCase(req.body.experience)
-        });
-        if (userExperience) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Experience is required' });
-        }
-        const userId = await User.findOne({
-            id: Helpers.lowerCase(req.body.id)
-        });
-        if (userId) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Trainer ID is required' });
-        }
+        // const userName = await User.findOne({
+        //     username: Helpers.firstUppercase(req.body.username)
+        // });
+        // if (userName) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Username already exist' });
+        // }
+        // const userAge = await User.findOne({
+        //     age: Helpers.lowerCase(req.body.age)
+        // });
+        // if (userAge) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'age is must' });
+        // }
+        // const userAddress = await User.findOne({
+        //     address: Helpers.lowerCase(req.body.address)
+        // });
+        // if (userAddress) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'address is required' });
+        // }
+        // const userLanguage = await User.findOne({
+        //     language: Helpers.lowerCase(req.body.language)
+        // });
+        // if (userLanguage) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'languages are required' });
+        // }
+        // const userCertification = await User.findOne({
+        //     certification: Helpers.lowerCase(req.body.certification)
+        // });
+        // if (userCertification) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Certifications are required' });
+        // }
+        // const userSpecialization = await User.findOne({
+        //     specialization: Helpers.lowerCase(req.body.specialization)
+        // });
+        // if (userSpecialization) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Specialization are required' });
+        // }
+        // const userTagline = await User.findOne({
+        //     tagline: Helpers.lowerCase(req.body.tagline)
+        // });
+        // if (userTagline) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Tagline is required' });
+        // }
+        // const userExperience = await User.findOne({
+        //     experience: Helpers.lowerCase(req.body.experience)
+        // });
+        // if (userExperience) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Experience is required' });
+        // }
+        // const userId = await User.findOne({
+        //     id: Helpers.lowerCase(req.body.id)
+        // });
+        // if (userId) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Trainer ID is required' });
+        // }
         // const role = await User.findOne({
         //     role: Helpers.firstUppercase(req.body.role)
         // });
@@ -298,55 +299,39 @@ module.exports = {
 
         // }
 
-        return bcrypt.hash(value.password, 10, (err, hash) => {
+        return bcrypt.hash(req.body.password, 10, (err, hash) => {
             if (err) {
                 return res
                     .status(httpStatus.BAD_REQUEST)
                     .json({ message: 'ERROR HASHING PASSWORD' });
             }//if there is any error in password hashing return that error, if not exceute the below
             const body = {
-                username: Helpers.firstUppercase(value.username),
-                email: Helpers.lowerCase(value.email),
+                username: req.body.username,
+                email: req.body.email,
                 phonenumber: req.body.phonenumber,
                 age: req.body.age,
                 address: req.body.address,
-                certification: req.body.certification,
-                specialization: req.body.specialization,
-                tagline: req.body.tagline,
-                experience: req.body.experience,
-                id: req.body.id,
+                // certification: req.body.certification,
+                // specialization: req.body.specialization,
+                // tagline: req.body.tagline,
+                // experience: req.body.experience,                
                 language: req.body.language,
                 role: 'trainer',
                 password: hash
             };//new object is created, created all those mentioned 
             User.create(body)//mongoose create method
-                .then((
-                    //     async user => {
-                    //     await user.updateMany({
-                    //         _id: req.user._id
-                    //     },
-                    //         {
-                    //             $push: {
-                    //                 posts: {
-                    //                     postId: post._id,
-                    //                     post: req.body.post,
-                    //                     created: new Date()
-                    //                 }
-                    //             }
-                    //         }
-                    //         );
-                    //     res.status(HttpStatus.OK).json({ message: 'Post created', post });
-                    // }
-                    user) => {
-                    res.status(httpStatus.OK).json({ message: 'User created', user });
-                    // const token = jwt.sign({data : user}, dbConfig.secret,{
-                    //     expiresIn:'9h'
-                    // });
+                .then((user) => {
+                    Trainer.create({
+                        certification: req.body.certification,
+                        specialization: req.body.specialization,
+                        tagline: req.body.tagline,
+                        experience: req.body.experience,
+                        user: user.id,
+                        id: req.body.id,
+                    }).then((trainer) => {
+                        res.status(httpStatus.OK).json({ message: 'Trainer created', user, trainer });
 
-                    // res.cookie('auth', token);
-                    //     res
-                    //     .status(HttpStatus.CREATED)
-                    //     .json({message: 'user created successfully', user, token});
+                    })
                 }
                 ) //SAVE IN THE DATABASE
                 .catch(err => {
@@ -439,7 +424,39 @@ module.exports = {
             res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
         });
     },
+    // updating the users
+    async UpdateUser(req, res) {
+        console.log(req.body);
 
+        // const body = {
+        //     username: req.body.username,
+        //     email: req.body.email,
+        //     phonenumber: req.body.phonenumber,
+        //     user: req.user._id,
+        // };
+        // console.log(body);
+
+        let result = await User.updateMany(
+            {
+
+                _id: req.body._id,
+
+            }, {
+            username: req.body.username,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber
+        }
+        )
+            .then((user) => {
+                res.status(httpStatus.OK).json({ message: 'Updated User', user });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
     async ChangePassword(req, res) {
         const schema = Joi.object().keys({
             cpassword: Joi.string().required(),
@@ -549,17 +566,13 @@ module.exports = {
     // updating gyms / gym profiles
     async UpdateGymProfile(req, res) {
         console.log(req.body);
-        try {
 
-        } catch (error) {
-
-        }
-        const body = {
-            gymname: req.body.gymname,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            user: req.user._id,
-        };
+        // const body = {
+        //     gymname: req.body.gymname,
+        //     email: req.body.email,
+        //     phonenumber: req.body.phonenumber,
+        //     user: req.user._id,
+        // };
         // console.log(body);
 
         let result = await Gym.updateMany(
@@ -612,6 +625,15 @@ module.exports = {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
     },
+    // getting only one trainer
+    async GetTrainerOne(req, res) {
+        await User.find({ _id: req.user._id })
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'one trainer', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
     // Deleting Gyms
     async DeleteGym(req, res) {
         // ({_id:req.params})
@@ -625,7 +647,45 @@ module.exports = {
     },
     // Updating the trainer profile
     async UpdateTrainerPofile(req, res) {
+        console.log(req.body);
 
+        // const body = {
+        //     email: Helpers.lowerCase(value.email),
+        //     phonenumber: req.body.phonenumber,
+        //     age: req.body.age,
+        //     address: req.body.address,
+        //     specialization: req.body.specialization,
+        //     tagline: req.body.tagline,
+        //     experience: req.body.experience,
+        //     user: req.user._id,
+
+        // };
+        let result = await Trainer.updateMany(
+            {
+
+                _id: req.body._id,
+
+            }, {
+            usernam: req.body.username,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber,
+            age: req.body.age,
+            address: req.body.address,
+            specialization: req.body.specialization,
+            tagline: req.body.tagline,
+            experience: req.body.experience,
+
+        }
+        )
+            .then((trainer) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
     },
     async UpdateGymWorkingHours(req, res) {
         console.log(req.body);

@@ -17,7 +17,11 @@ router.post('/user/view-profile', AuthHelper.VerifyToken, UserCtrl.ProfileView);
 router.post('/change-password', AuthHelper.VerifyToken, UserCtrl.ChangePassword);
 router.get('/userrole', AuthHelper.VerifyToken, UserCtrl.userrole);
 router.get('/getgymowner', AuthHelper.VerifyToken, UserCtrl.GetGymOwner);
+// getting all trainers
 router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
+// getting onr trianer
+router.get('/gettrainerone', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
+
 // gym profile create
 router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile);
 router.post('/creategymprofile', AuthHelper.VerifyToken, UserCtrl.CreateGymProfile);
@@ -30,6 +34,12 @@ router.get('/getallgyms', AuthHelper.VerifyToken, UserCtrl.GetAllGyms);
 router.get('/getownergyms', AuthHelper.VerifyToken, UserCtrl.GetOwnerGyms);
 // Deleting Gyms
 router.post('/deletegym', AuthHelper.VerifyToken, UserCtrl.DeleteGym);
+// Updating trainer Profile
+router.post('/updatetrainer/:id', AuthHelper.VerifyToken, UserCtrl.UpdateTrainerPofile);
+// updating User rpofile
+router.post('/updateUser', AuthHelper.VerifyToken, UserCtrl.UpdateUser);
+
+
 
 
 
