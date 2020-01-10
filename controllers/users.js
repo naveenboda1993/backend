@@ -627,9 +627,9 @@ module.exports = {
     },
     // getting only one trainer
     async GetTrainerOne(req, res) {
-        await User.findOne({ _id: req.params.id })
+        await User.findOne({ _id: req.user._id })
             .then((user) => {
-                 Trainer.findOne({ user: req.params.id })
+                 Trainer.findOne({ user: req.user._id })
                 .then((tranier) => {
                     res.status(httpStatus.OK).json({ message: 'one trainer',  user, tranier });
                 }).catch(err => {

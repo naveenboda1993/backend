@@ -20,7 +20,7 @@ router.get('/getgymowner', AuthHelper.VerifyToken, UserCtrl.GetGymOwner);
 // getting role trainers from usersdb
 router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
 // getting one trianer 
-router.get('/gettrainerone/:id', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
+router.get('/gettrainerone', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
 
 // gym profile create
 router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile);
