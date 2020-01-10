@@ -6,6 +6,9 @@ const trainerModel = {
     specialization: { type: String, default: '' },
     tagline: { type: String, default: '' },    
     experience: { type: String, default: '' },    
+    languages: { type: String, default: '' },    
+    age: { type: String, default: '' },    
+    address: { type: String, default: '' },    
     id: { type: String, default: '' },    
     images: [
         {

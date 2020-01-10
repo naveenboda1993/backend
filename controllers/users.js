@@ -326,6 +326,9 @@ module.exports = {
                         specialization: req.body.specialization,
                         tagline: req.body.tagline,
                         experience: req.body.experience,
+                        languages: req.body.language,
+                        age: req.body.age,
+                        address: req.body.address,
                         user: userResult._id,
                         id: req.body.id,
                     }).then((trainer) => {
