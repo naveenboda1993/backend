@@ -632,16 +632,16 @@ module.exports = {
     async GetTrainerOne(req, res) {
         await User.findOne({ _id: req.params.id })
             .then((user) => {
-                 Trainer.findOne({ user: req.params.id })
-                .then((tranier) => {
-                    res.status(httpStatus.OK).json({ message: 'one trainer',  user, tranier });
-                }).catch(err => {
-                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error1 Occurred' });
-                })               
+                Trainer.findOne({ user: req.params.id })
+                    .then((tranier) => {
+                        res.status(httpStatus.OK).json({ message: 'one trainer', user, tranier });
+                    }).catch(err => {
+                        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error1 Occurred' });
+                    })
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
-       
+
     },
     // Deleting Gyms
     async DeleteGym(req, res) {
@@ -671,23 +671,40 @@ module.exports = {
         // };
         let result = await Trainer.updateMany(
             {
+                user: req.params.id,
 
-                _id: req.body._id,
+            },
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                age: req.body.age,
+                address: req.body.address,
+                specialization: req.body.specialization,
+                tagline: req.body.tagline,
+                experience: req.body.experience,
+                languages: req.body.languages,
+            }
+        )
+         await User.updateMany(
+            {
+                _id: req.params.id,
 
-            }, {
-            usernam: req.body.username,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            age: req.body.age,
-            address: req.body.address,
-            specialization: req.body.specialization,
-            tagline: req.body.tagline,
-            experience: req.body.experience,
-
-        }
+            },
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                // age: req.body.age,
+                // address: req.body.address,
+                // specialization: req.body.specialization,
+                // tagline: req.body.tagline,
+                // experience: req.body.experience,
+                // languages: req.body.languages,
+            }
         )
             .then((trainer) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+                res.status(httpStatus.OK).json({ message: 'Updated Trainer',  trainer });
             }
             )
             .catch(err => {
