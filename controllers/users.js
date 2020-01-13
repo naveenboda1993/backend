@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const Helpers = require('../helpers/helpers');
 const Gym = require('../models/gymModels');
 const Trainer = require('../models/trainerModels');
+const Service = require('../models/serviceModels');
 
 
 module.exports = {
@@ -309,6 +310,7 @@ module.exports = {
                 username: req.body.username,
                 email: req.body.email,
                 phonenumber: req.body.phonenumber,
+                officenumber: req.body.officenumber,
                 age: req.body.age,
                 address: req.body.address,
                 // certification: req.body.certification,
@@ -327,6 +329,10 @@ module.exports = {
                         tagline: req.body.tagline,
                         experience: req.body.experience,
                         languages: req.body.language,
+                        accountnumber: req.body.accountnumber,
+                        bankname: req.body.bankname,
+                        ifsccode: req.body.ifsccode,
+                        holdername: req.body.holdername,
                         age: req.body.age,
                         address: req.body.address,
                         user: userResult._id,
@@ -547,12 +553,18 @@ module.exports = {
             gymname: req.body.gymname,
             email: req.body.email,
             phonenumber: req.body.phonenumber,
+            oficenumber: req.body.officenumber,
             user: req.user._id,
             gymtag: req.body.tag,
             services: req.body.services,
             gymdec: req.body.discripition,
             address: req.body.address,
-            workinghours: workinghours
+            workinghours: workinghours,
+            accountnumber: req.body.accountnumber,
+            bankname: req.body.bankname,
+            ifsccode: req.body.ifsccode,
+            holdername: req.body.holdername,
+            timings: req.body.timings
         };
         // console.log(body);
         Gym.create(body)
@@ -632,16 +644,16 @@ module.exports = {
     async GetTrainerOne(req, res) {
         await User.findOne({ _id: req.params.id })
             .then((user) => {
-                 Trainer.findOne({ user: req.params.id })
-                .then((tranier) => {
-                    res.status(httpStatus.OK).json({ message: 'one trainer',  user, tranier });
-                }).catch(err => {
-                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error1 Occurred' });
-                })               
+                Trainer.findOne({ user: req.params.id })
+                    .then((tranier) => {
+                        res.status(httpStatus.OK).json({ message: 'one trainer', user, tranier });
+                    }).catch(err => {
+                        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error1 Occurred' });
+                    })
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
-       
+
     },
     // Deleting Gyms
     async DeleteGym(req, res) {
@@ -725,4 +737,23 @@ module.exports = {
                     .json({ message: err });
             });
     },
-};
+    async AddServices(req, res) {
+        console.log(req.body);
+        const body = {
+            kickboing: req.body.kickboing,
+            aerobics: req.body.aerobics,
+            spinning: req.body.spinning,
+            workout: req.body.workout,
+        };
+        Service.create(body)
+            .then((service) => {
+                res.status(httpStatus.OK).json({ message: 'Services added', service });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    }
+}

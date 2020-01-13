@@ -10,6 +10,10 @@ const trainerModel = {
     age: { type: String, default: '' },    
     address: { type: String, default: '' },    
     id: { type: String, default: '' },    
+    accountnumber: { type: String, default: '' },    
+    bankname: { type: String, default: '' },    
+    ifsccode: { type: String, default: '' },    
+    holdername: { type: String, default: '' },    
     images: [
         {
             imgId: { type: String, default: '' },
