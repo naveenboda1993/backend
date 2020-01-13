@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 
 const serviceModels ={
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    kickboing: { type: String, default: '' },
-    aerobics: { type: String, default: '' },
-    spinning: { type: String, default: '' },
-    workout: { type: String, default: '' },
+    name: { type: String, default: '' },
+    desc: { type: String, default: '' },
+    code: { type: String, default: '' },
+    status: { type: String, default: '' },
 
 
     images: [
