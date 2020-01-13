@@ -683,23 +683,40 @@ module.exports = {
         // };
         let result = await Trainer.updateMany(
             {
+                user: req.params.id,
 
-                _id: req.body._id,
+            },
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                age: req.body.age,
+                address: req.body.address,
+                specialization: req.body.specialization,
+                tagline: req.body.tagline,
+                experience: req.body.experience,
+                languages: req.body.languages,
+            }
+        )
+         await User.updateMany(
+            {
+                _id: req.params.id,
 
-            }, {
-            usernam: req.body.username,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            age: req.body.age,
-            address: req.body.address,
-            specialization: req.body.specialization,
-            tagline: req.body.tagline,
-            experience: req.body.experience,
-
-        }
+            },
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                // age: req.body.age,
+                // address: req.body.address,
+                // specialization: req.body.specialization,
+                // tagline: req.body.tagline,
+                // experience: req.body.experience,
+                // languages: req.body.languages,
+            }
         )
             .then((trainer) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+                res.status(httpStatus.OK).json({ message: 'Updated Trainer',  trainer });
             }
             )
             .catch(err => {
