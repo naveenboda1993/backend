@@ -30,11 +30,7 @@ module.exports = {
             address: Joi.string()
                 .min(1)
                 .max(50)
-                .required(),
-            language: Joi.string()
-                .min(1)
-                .max(20)
-                .required(),
+                .required(),            
             password: Joi.string()
                 .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
         });
@@ -52,51 +48,16 @@ module.exports = {
         //     return res.status(500).json({issucess:true,message:"successfully email validate" });
         // }
 
-        const userEmail = await User.findOne({
-            email: Helpers.lowerCase(req.body.email)
-        });
-        if (userEmail) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Email already exist' });
+        // const userEmail = await User.findOne({
+        //     email: Helpers.lowerCase(req.body.email)
+        // });
+        // if (userEmail) {
+        //     return res
+        //         .status(httpStatus.CONFLICT)
+        //         .json({ message: 'Email already exist' });
 
-        }
-        const userAge = await User.findOne({
-            age: Helpers.lowerCase(req.body.age)
-        });
-        if (userAge) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'age is must' });
-
-        }
-        const userAddress = await User.findOne({
-            address: Helpers.lowerCase(req.body.address)
-        });
-        if (userAddress) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'address is required' });
-
-        }
-        const userLanguage = await User.findOne({
-            language: Helpers.lowerCase(req.body.language)
-        });
-        if (userLanguage) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'languages are required' });
-
-        }
-        const userName = await User.findOne({
-            username: Helpers.firstUppercase(req.body.username)
-        });
-        if (userName) {
-            return res
-                .status(httpStatus.CONFLICT)
-                .json({ message: 'Username already exist' });
-
-        }
+        // }
+        
         // const role = await User.findOne({
         //     role: Helpers.firstUppercase(req.body.role)
         // });
@@ -118,38 +79,13 @@ module.exports = {
                 phonenumber: req.body.phonenumber,
                 age: req.body.age,
                 address: req.body.address,
-                language: req.body.language,
                 role: 'gymowner',
                 password: hash
             };//new object is created, created all those mentioned 
             User.create(body)//mongoose create method
-                .then((
-                    //     async user => {
-                    //     await user.updateMany({
-                    //         _id: req.user._id
-                    //     },
-                    //         {
-                    //             $push: {
-                    //                 posts: {
-                    //                     postId: post._id,
-                    //                     post: req.body.post,
-                    //                     created: new Date()
-                    //                 }
-                    //             }
-                    //         }
-                    //         );
-                    //     res.status(HttpStatus.OK).json({ message: 'Post created', post });
-                    // }
+                .then((                  
                     user) => {
-                    res.status(httpStatus.OK).json({ message: 'User created', user });
-                    // const token = jwt.sign({data : user}, dbConfig.secret,{
-                    //     expiresIn:'9h'
-                    // });
-
-                    // res.cookie('auth', token);
-                    //     res
-                    //     .status(HttpStatus.CREATED)
-                    //     .json({message: 'user created successfully', user, token});
+                    res.status(httpStatus.OK).json({ message: 'User created', user });                    
                 }
                 ) //SAVE IN THE DATABASE
                 .catch(err => {
@@ -669,112 +605,112 @@ module.exports = {
         await User.findOne({ _id: req.params.id })
             .then((user) => {
                 res.status(httpStatus.OK).json({ message: 'one gymowner', user });
-                }).catch(err => {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
-    })
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
 
-},
+    },
 
     // Deleting Gyms
     async DeleteGym(req, res) {
-    // ({_id:req.params})
-    console.log(req.body);
-    await Gym.deleteMany({ email: req.body.email })
-        .then((result) => {
-            res.status(httpStatus.OK).json({ message: 'Deleted', result });
-        }).catch(err => {
-            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
-        })
-},
-// Updating the trainer profile
-async UpdateTrainerPofile(req, res) {
-    console.log(req.body);
+        // ({_id:req.params})
+        console.log(req.body);
+        await Gym.deleteMany({ email: req.body.email })
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'Deleted', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
+    // Updating the trainer profile
+    async UpdateTrainerPofile(req, res) {
+        console.log(req.body);
 
-    // const body = {
-    //     email: Helpers.lowerCase(value.email),
-    //     phonenumber: req.body.phonenumber,
-    //     age: req.body.age,
-    //     address: req.body.address,
-    //     specialization: req.body.specialization,
-    //     tagline: req.body.tagline,
-    //     experience: req.body.experience,
-    //     user: req.user._id,
+        // const body = {
+        //     email: Helpers.lowerCase(value.email),
+        //     phonenumber: req.body.phonenumber,
+        //     age: req.body.age,
+        //     address: req.body.address,
+        //     specialization: req.body.specialization,
+        //     tagline: req.body.tagline,
+        //     experience: req.body.experience,
+        //     user: req.user._id,
 
-    // };
-    let result = await Trainer.updateMany(
-        {
-            user: req.params.id,
-
-        },
-        {
-            username: req.body.username,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            age: req.body.age,
-            address: req.body.address,
-            specialization: req.body.specialization,
-            tagline: req.body.tagline,
-            experience: req.body.experience,
-            languages: req.body.languages,
-        }
-    )
-    await User.updateMany(
-        {
-            _id: req.params.id,
-
-        },
-        {
-            username: req.body.username,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            // age: req.body.age,
-            // address: req.body.address,
-            // specialization: req.body.specialization,
-            // tagline: req.body.tagline,
-            // experience: req.body.experience,
-            // languages: req.body.languages,
-        }
-    )
-        .then((trainer) => {
-            res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
-        }
-        )
-        .catch(err => {
-            res
-                .status(httpStatus.INTERNAL_SERVER_ERROR)
-                .json({ message: err });
-        });
-},
-async UpdateGymWorkingHours(req, res) {
-    console.log(req.body);
-
-    // console.log(body);
-    await Gym.updateMany(
-        {
-            "workinghours._id": req.body.gym.selectdatevalue._id
-        },
-        {
-            $set:
+        // };
+        let result = await Trainer.updateMany(
             {
-                "workinghours.$.duration": req.body.gym.selectdatevalue.duration,
-                "workinghours.$.multiplebookings": req.body.gym.selectdatevalue.multiplebookings,
-                "workinghours.$.numberofbookings": req.body.gym.selectdatevalue.numberofbookings,
-                "workinghours.$.status": req.body.gym.selectdatevalue.status,
-                "workinghours.$.slots": req.body.gym.timings,
+                user: req.params.id,
+
+            },
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                age: req.body.age,
+                address: req.body.address,
+                specialization: req.body.specialization,
+                tagline: req.body.tagline,
+                experience: req.body.experience,
+                languages: req.body.languages,
             }
-        }
-    )
-        .then((gym) => {
-            res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
-        }
         )
-        .catch(err => {
-            res
-                .status(httpStatus.INTERNAL_SERVER_ERROR)
-                .json({ message: err });
-        });
-},
-   async AddServices(req, res) {
+        await User.updateMany(
+            {
+                _id: req.params.id,
+
+            },
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                // age: req.body.age,
+                // address: req.body.address,
+                // specialization: req.body.specialization,
+                // tagline: req.body.tagline,
+                // experience: req.body.experience,
+                // languages: req.body.languages,
+            }
+        )
+            .then((trainer) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
+    async UpdateGymWorkingHours(req, res) {
+        console.log(req.body);
+
+        // console.log(body);
+        await Gym.updateMany(
+            {
+                "workinghours._id": req.body.gym.selectdatevalue._id
+            },
+            {
+                $set:
+                {
+                    "workinghours.$.duration": req.body.gym.selectdatevalue.duration,
+                    "workinghours.$.multiplebookings": req.body.gym.selectdatevalue.multiplebookings,
+                    "workinghours.$.numberofbookings": req.body.gym.selectdatevalue.numberofbookings,
+                    "workinghours.$.status": req.body.gym.selectdatevalue.status,
+                    "workinghours.$.slots": req.body.gym.timings,
+                }
+            }
+        )
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
+    async AddServices(req, res) {
         console.log(req.body);
         const body = {
             name: req.body.servicename,
@@ -800,5 +736,25 @@ async UpdateGymWorkingHours(req, res) {
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
+    },
+    async UpdatingGymServices(req, res) {
+        await Gym.updateMany(
+            {
+
+                _id: req.body.data.gymid,
+
+            }, {
+            services: req.body.data.services
+        }
+        )
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
     }
 }
