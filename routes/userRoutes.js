@@ -38,8 +38,10 @@ router.post('/deletegym', AuthHelper.VerifyToken, UserCtrl.DeleteGym);
 router.post('/updatetrainer/:id', AuthHelper.VerifyToken, UserCtrl.UpdateTrainerPofile);
 // updating User rpofile
 router.post('/updateUser', AuthHelper.VerifyToken, UserCtrl.UpdateUser);
-// getting services
+// Adding services
 router.post('/addservice', AuthHelper.VerifyToken, UserCtrl.AddServices);
+// getting services
+router.get('/getservice', AuthHelper.VerifyToken, UserCtrl.GetServices);
 
 
 

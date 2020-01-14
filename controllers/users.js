@@ -633,12 +633,22 @@ module.exports = {
     // getting  GetOwnerGyms
     async GetOwnerGyms(req, res) {
         // user: req.user._id,
-        await Gym.find({ user: req.user._id })
-            .then((result) => {
-                res.status(httpStatus.OK).json({ message: 'All gyms', result });
-            }).catch(err => {
-                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
-            })
+        if (req.user.role == 'admin') {
+            await Gym.find()
+                .then((result) => {
+                    res.status(httpStatus.OK).json({ message: 'All gyms', result });
+                }).catch(err => {
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+                })
+        } else {
+            await Gym.find({ user: req.user._id })
+                .then((result) => {
+                    res.status(httpStatus.OK).json({ message: 'All gyms', result });
+                }).catch(err => {
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+                })
+        }
+
     },
     // getting only one trainer
     async GetTrainerOne(req, res) {
@@ -698,7 +708,7 @@ module.exports = {
                 languages: req.body.languages,
             }
         )
-         await User.updateMany(
+        await User.updateMany(
             {
                 _id: req.params.id,
 
@@ -716,7 +726,7 @@ module.exports = {
             }
         )
             .then((trainer) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Trainer',  trainer });
+                res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
             }
             )
             .catch(err => {
@@ -757,10 +767,10 @@ module.exports = {
     async AddServices(req, res) {
         console.log(req.body);
         const body = {
-            kickboing: req.body.kickboing,
-            aerobics: req.body.aerobics,
-            spinning: req.body.spinning,
-            workout: req.body.workout,
+            name: req.body.servicename,
+            servicedec: req.body.servicedec,
+            servicecode: req.body.servicecode,
+            status: req.body.status
         };
         Service.create(body)
             .then((service) => {
@@ -772,5 +782,13 @@ module.exports = {
                     .status(httpStatus.INTERNAL_SERVER_ERROR)
                     .json({ message: err });
             });
+    },
+    async GetServices(req, res) {
+        await Service.find()
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'All Services', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
     }
 }
