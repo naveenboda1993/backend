@@ -389,7 +389,9 @@ module.exports = {
             }, {
             username: req.body.username,
             email: req.body.email,
-            phonenumber: req.body.phonenumber
+            phonenumber: req.body.phonenumber,
+            address: req.body.address,
+            age:req.body.age
         }
         )
             .then((user) => {
