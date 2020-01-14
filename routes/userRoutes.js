@@ -21,6 +21,8 @@ router.get('/getgymowner', AuthHelper.VerifyToken, UserCtrl.GetGymOwner);
 router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
 // getting one trianer 
 router.get('/gettrainerone/:id', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
+// getting one gym owner
+router.get('/getgymownerone/:id', AuthHelper.VerifyToken, UserCtrl.GetGymOwnerOne);
 
 // gym profile create
 router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile);

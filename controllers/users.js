@@ -655,122 +655,132 @@ module.exports = {
             })
 
     },
+    async GetGymOwnerOne(req, res) {
+        await User.findOne({ _id: req.params.id })
+            .then((user) => {
+                res.status(httpStatus.OK).json({ message: 'one gymowner', user });
+                }).catch(err => {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+    })
+
+},
+
     // Deleting Gyms
     async DeleteGym(req, res) {
-        // ({_id:req.params})
-        console.log(req.body);
-        await Gym.deleteMany({ email: req.body.email })
-            .then((result) => {
-                res.status(httpStatus.OK).json({ message: 'Deleted', result });
-            }).catch(err => {
-                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
-            })
-    },
-    // Updating the trainer profile
-    async UpdateTrainerPofile(req, res) {
-        console.log(req.body);
+    // ({_id:req.params})
+    console.log(req.body);
+    await Gym.deleteMany({ email: req.body.email })
+        .then((result) => {
+            res.status(httpStatus.OK).json({ message: 'Deleted', result });
+        }).catch(err => {
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+        })
+},
+// Updating the trainer profile
+async UpdateTrainerPofile(req, res) {
+    console.log(req.body);
 
-        // const body = {
-        //     email: Helpers.lowerCase(value.email),
-        //     phonenumber: req.body.phonenumber,
-        //     age: req.body.age,
-        //     address: req.body.address,
-        //     specialization: req.body.specialization,
-        //     tagline: req.body.tagline,
-        //     experience: req.body.experience,
-        //     user: req.user._id,
+    // const body = {
+    //     email: Helpers.lowerCase(value.email),
+    //     phonenumber: req.body.phonenumber,
+    //     age: req.body.age,
+    //     address: req.body.address,
+    //     specialization: req.body.specialization,
+    //     tagline: req.body.tagline,
+    //     experience: req.body.experience,
+    //     user: req.user._id,
 
-        // };
-        let result = await Trainer.updateMany(
-            {
-                user: req.params.id,
+    // };
+    let result = await Trainer.updateMany(
+        {
+            user: req.params.id,
 
-            },
-            {
-                username: req.body.username,
-                email: req.body.email,
-                phonenumber: req.body.phonenumber,
-                age: req.body.age,
-                address: req.body.address,
-                specialization: req.body.specialization,
-                tagline: req.body.tagline,
-                experience: req.body.experience,
-                languages: req.body.languages,
-            }
+        },
+        {
+            username: req.body.username,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber,
+            age: req.body.age,
+            address: req.body.address,
+            specialization: req.body.specialization,
+            tagline: req.body.tagline,
+            experience: req.body.experience,
+            languages: req.body.languages,
+        }
+    )
+    await User.updateMany(
+        {
+            _id: req.params.id,
+
+        },
+        {
+            username: req.body.username,
+            email: req.body.email,
+            phonenumber: req.body.phonenumber,
+            // age: req.body.age,
+            // address: req.body.address,
+            // specialization: req.body.specialization,
+            // tagline: req.body.tagline,
+            // experience: req.body.experience,
+            // languages: req.body.languages,
+        }
+    )
+        .then((trainer) => {
+            res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+        }
         )
-         await User.updateMany(
-            {
-                _id: req.params.id,
+        .catch(err => {
+            res
+                .status(httpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: err });
+        });
+},
+async UpdateGymWorkingHours(req, res) {
+    console.log(req.body);
 
-            },
+    // console.log(body);
+    await Gym.updateMany(
+        {
+            "workinghours._id": req.body.gym.selectdatevalue._id
+        },
+        {
+            $set:
             {
-                username: req.body.username,
-                email: req.body.email,
-                phonenumber: req.body.phonenumber,
-                // age: req.body.age,
-                // address: req.body.address,
-                // specialization: req.body.specialization,
-                // tagline: req.body.tagline,
-                // experience: req.body.experience,
-                // languages: req.body.languages,
+                "workinghours.$.duration": req.body.gym.selectdatevalue.duration,
+                "workinghours.$.multiplebookings": req.body.gym.selectdatevalue.multiplebookings,
+                "workinghours.$.numberofbookings": req.body.gym.selectdatevalue.numberofbookings,
+                "workinghours.$.status": req.body.gym.selectdatevalue.status,
+                "workinghours.$.slots": req.body.gym.timings,
             }
+        }
+    )
+        .then((gym) => {
+            res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+        }
         )
-            .then((trainer) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Trainer',  trainer });
-            }
-            )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
-            });
-    },
-    async UpdateGymWorkingHours(req, res) {
-        console.log(req.body);
-
-        // console.log(body);
-        await Gym.updateMany(
-            {
-                "workinghours._id": req.body.gym.selectdatevalue._id
-            },
-            {
-                $set:
-                {
-                    "workinghours.$.duration": req.body.gym.selectdatevalue.duration,
-                    "workinghours.$.multiplebookings": req.body.gym.selectdatevalue.multiplebookings,
-                    "workinghours.$.numberofbookings": req.body.gym.selectdatevalue.numberofbookings,
-                    "workinghours.$.status": req.body.gym.selectdatevalue.status,
-                    "workinghours.$.slots": req.body.gym.timings,
-                }
-            }
+        .catch(err => {
+            res
+                .status(httpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: err });
+        });
+},
+async AddServices(req, res) {
+    console.log(req.body);
+    const body = {
+        kickboing: req.body.kickboing,
+        aerobics: req.body.aerobics,
+        spinning: req.body.spinning,
+        workout: req.body.workout,
+    };
+    Service.create(body)
+        .then((service) => {
+            res.status(httpStatus.OK).json({ message: 'Services added', service });
+        }
         )
-            .then((gym) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
-            }
-            )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
-            });
-    },
-    async AddServices(req, res) {
-        console.log(req.body);
-        const body = {
-            kickboing: req.body.kickboing,
-            aerobics: req.body.aerobics,
-            spinning: req.body.spinning,
-            workout: req.body.workout,
-        };
-        Service.create(body)
-            .then((service) => {
-                res.status(httpStatus.OK).json({ message: 'Services added', service });
-            }
-            )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
-            });
-    }
+        .catch(err => {
+            res
+                .status(httpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: err });
+        });
+}
 }
