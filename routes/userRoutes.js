@@ -44,6 +44,7 @@ router.post('/updateUser', AuthHelper.VerifyToken, UserCtrl.UpdateUser);
 router.post('/addservice', AuthHelper.VerifyToken, UserCtrl.AddServices);
 // getting services
 router.get('/getservice', AuthHelper.VerifyToken, UserCtrl.GetServices);
+router.post('/updatinggymservices', AuthHelper.VerifyToken, UserCtrl.UpdatingGymServices);
 
 
 
