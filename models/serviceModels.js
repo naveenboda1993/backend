@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const serviceModels ={
     name: { type: String, default: '' },
-    desc: { type: String, default: '' },
-    code: { type: String, default: '' },
+    servicedec: { type: String, default: '' },
+    servicecode: { type: String, default: '' },
     status: { type: String, default: '' },
 
 
