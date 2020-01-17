@@ -747,6 +747,14 @@ module.exports = {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
     },
+    async GetPrising(req, res) {
+        await Pricing.findOne({ user: req.user._id })
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'All Pricing', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
     async UpdatingGymServices(req, res) {
         await Gym.updateMany(
             {
