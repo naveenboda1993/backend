@@ -7,6 +7,7 @@ const Helpers = require('../helpers/helpers');
 const Gym = require('../models/gymModels');
 const Trainer = require('../models/trainerModels');
 const Service = require('../models/serviceModels');
+const Pricing = require('../models/pricingModels');
 
 
 module.exports = {
@@ -30,7 +31,7 @@ module.exports = {
             address: Joi.string()
                 .min(1)
                 .max(50)
-                .required(),            
+                .required(),
             password: Joi.string()
                 .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
         });
@@ -57,7 +58,7 @@ module.exports = {
         //         .json({ message: 'Email already exist' });
 
         // }
-        
+
         // const role = await User.findOne({
         //     role: Helpers.firstUppercase(req.body.role)
         // });
@@ -83,9 +84,9 @@ module.exports = {
                 password: hash
             };//new object is created, created all those mentioned 
             User.create(body)//mongoose create method
-                .then((                  
+                .then((
                     user) => {
-                    res.status(httpStatus.OK).json({ message: 'User created', user });                    
+                    res.status(httpStatus.OK).json({ message: 'User created', user });
                 }
                 ) //SAVE IN THE DATABASE
                 .catch(err => {
@@ -391,7 +392,7 @@ module.exports = {
             email: req.body.email,
             phonenumber: req.body.phonenumber,
             address: req.body.address,
-            age:req.body.age
+            age: req.body.age
         }
         )
             .then((user) => {
@@ -507,7 +508,14 @@ module.exports = {
         // console.log(body);
         Gym.create(body)
             .then((gym) => {
-                res.status(httpStatus.OK).json({ message: 'Gym created', gym });
+                Pricing.create({ user: req.user._id, gym: gym._id }).then((pricing) => {
+
+                    res.status(httpStatus.OK).json({ message: 'Gym created', gym, pricing });
+                }).catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
             }
             )
             .catch(err => {
