@@ -492,7 +492,7 @@ module.exports = {
             gymname: req.body.gymname,
             email: req.body.email,
             phonenumber: req.body.phonenumber,
-            oficenumber: req.body.officenumber,
+            officenumber: req.body.officenumber,
             user: req.user._id,
             gymtag: req.body.tag,
             services: req.body.services,
@@ -539,12 +539,20 @@ module.exports = {
         let result = await Gym.updateMany(
             {
 
-                _id: req.body._id,
+                _id: req.params.id,
 
             }, {
             gymname: req.body.gymname,
             email: req.body.email,
-            phonenumber: req.body.phonenumber
+            phonenumber: req.body.phonenumber,
+            gymdec:req.body.gymdec,
+            gymtag:req.body.gymtag,
+            officenumber:req.body.officenumber,
+            accountnumber:req.body.accountnumber,
+            bankname:req.body.bankname,
+            ifsccode:req.body.ifsccode,
+            holdername:req.body.holdername,
+            address:req.body.address,
         }
         )
             .then((gym) => {
@@ -611,6 +619,17 @@ module.exports = {
             })
 
     },
+    // getting only one gym
+    async GetGymOne(req, res) {
+        await Gym.findOne({ _id: req.params.id })
+            .then((result) => {
+               res.status(httpStatus.OK).json({ message: 'one gym', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+
+    },
+
     async GetGymOwnerOne(req, res) {
         await User.findOne({ _id: req.params.id })
             .then((user) => {
@@ -636,32 +655,23 @@ module.exports = {
     async UpdateTrainerPofile(req, res) {
         console.log(req.body);
 
-        // const body = {
-        //     email: Helpers.lowerCase(value.email),
-        //     phonenumber: req.body.phonenumber,
-        //     age: req.body.age,
-        //     address: req.body.address,
-        //     specialization: req.body.specialization,
-        //     tagline: req.body.tagline,
-        //     experience: req.body.experience,
-        //     user: req.user._id,
-
-        // };
+        
         let result = await Trainer.updateMany(
             {
                 user: req.params.id,
 
             },
             {
-                username: req.body.username,
-                email: req.body.email,
-                phonenumber: req.body.phonenumber,
-                age: req.body.age,
-                address: req.body.address,
-                specialization: req.body.specialization,
-                tagline: req.body.tagline,
-                experience: req.body.experience,
-                languages: req.body.languages,
+                // username: req.body.username,
+                // email: req.body.email,
+                // phonenumber: req.body.phonenumber,
+                // age: req.body.trainer.age,
+                address: req.body.tranier.address,
+                specialization: req.body.tranier.specialization,
+                certification: req.body.tranier.certification,
+                tagline: req.body.tranier.tagline,
+                experience: req.body.tranier.experience,
+                languages: req.body.tranier.languages,
             }
         )
         await User.updateMany(
@@ -670,15 +680,10 @@ module.exports = {
 
             },
             {
-                username: req.body.username,
-                email: req.body.email,
-                phonenumber: req.body.phonenumber,
-                // age: req.body.age,
-                // address: req.body.address,
-                // specialization: req.body.specialization,
-                // tagline: req.body.tagline,
-                // experience: req.body.experience,
-                // languages: req.body.languages,
+                username: req.body.user.username,
+                email: req.body.user.email,
+                phonenumber: req.body.user.phonenumber,
+               
             }
         )
             .then((trainer) => {

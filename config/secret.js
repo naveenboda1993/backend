@@ -3,6 +3,7 @@ module.exports = {
     // url :'mongodb://127.0.0.1:27017/chatapp',
     // secret: 'myjsonsecrets'
     url :'mongodb://naveen1:naveen1@ds239928.mlab.com:39928/chatbox',
+    // url :'mongodb://naveen1:naveen1@ds263928.mlab.com:63928/4fitz',
     // url :'mongodb://naveen1:naveen1@ds143980.mlab.com:43980/naveenbodadb',
     secret: 'myjsonsecrets'
 };

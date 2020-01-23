@@ -29,6 +29,7 @@ const gymmodel = {
     holdername: { type: String },
     timings: { type: String },
     phonenumber: { type: Number },
+    officenumber: { type: Number },
     picVersion: { type: String, default: '1578562408' },
     picId: { type: String, default: 'gym-default-image.jpg' },
     images: [
