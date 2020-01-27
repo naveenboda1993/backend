@@ -261,6 +261,9 @@ module.exports = {
             User.create(body)//mongoose create method
                 .then((userResult) => {
                     Trainer.create({
+                        surname: req.body.surname,
+                        name: req.body.name,
+                        dob: req.body.dob,
                         certification: req.body.certification,
                         specialization: req.body.specialization,
                         tagline: req.body.tagline,
@@ -271,7 +274,14 @@ module.exports = {
                         ifsccode: req.body.ifsccode,
                         holdername: req.body.holdername,
                         age: req.body.age,
-                        address: req.body.address,
+                        // address: req.body.address,
+                        flatno: req.body.flatno,
+                        street: req.body.street,
+                        area: req.body.area,
+                        locality: req.body.locality,
+                        city: req.body.city,
+                        pincode: req.body.pincode,
+                        state: req.body.state,
                         user: userResult._id,
                         id: req.body.id,
                     }).then((trainer) => {
@@ -490,6 +500,7 @@ module.exports = {
         workinghours.push({ day: 'sunday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
         const body = {
             gymname: req.body.gymname,
+            ownername: req.body.ownername,
             email: req.body.email,
             phonenumber: req.body.phonenumber,
             officenumber: req.body.officenumber,
@@ -497,7 +508,13 @@ module.exports = {
             gymtag: req.body.tag,
             services: req.body.services,
             gymdec: req.body.discripition,
-            address: req.body.address,
+            flatno: req.body.flatno,
+            street: req.body.street,
+            area: req.body.area,
+            locality: req.body.locality,
+            city: req.body.city,
+            pincode: req.body.pincode,
+            state: req.body.state,
             workinghours: workinghours,
             accountnumber: req.body.accountnumber,
             bankname: req.body.bankname,
@@ -543,16 +560,23 @@ module.exports = {
 
             }, {
             gymname: req.body.gymname,
+            ownernme:req.body.ownername,
             email: req.body.email,
             phonenumber: req.body.phonenumber,
-            gymdec:req.body.gymdec,
-            gymtag:req.body.gymtag,
-            officenumber:req.body.officenumber,
-            accountnumber:req.body.accountnumber,
-            bankname:req.body.bankname,
-            ifsccode:req.body.ifsccode,
-            holdername:req.body.holdername,
-            address:req.body.address,
+            gymdec: req.body.gymdec,
+            gymtag: req.body.gymtag,
+            officenumber: req.body.officenumber,
+            accountnumber: req.body.accountnumber,
+            bankname: req.body.bankname,
+            ifsccode: req.body.ifsccode,
+            holdername: req.body.holdername,
+            flatno: req.body.flatno,
+            street: req.body.street,
+            area: req.body.area,
+            locality: req.body.locality,
+            city: req.body.city,
+            pincode: req.body.pincode,
+            state: req.body.state,
         }
         )
             .then((gym) => {
@@ -623,7 +647,7 @@ module.exports = {
     async GetGymOne(req, res) {
         await Gym.findOne({ _id: req.params.id })
             .then((result) => {
-               res.status(httpStatus.OK).json({ message: 'one gym', result });
+                res.status(httpStatus.OK).json({ message: 'one gym', result });
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
@@ -655,7 +679,7 @@ module.exports = {
     async UpdateTrainerPofile(req, res) {
         console.log(req.body);
 
-        
+
         let result = await Trainer.updateMany(
             {
                 user: req.params.id,
@@ -666,7 +690,17 @@ module.exports = {
                 // email: req.body.email,
                 // phonenumber: req.body.phonenumber,
                 // age: req.body.trainer.age,
-                address: req.body.tranier.address,
+                // address: req.body.tranier.address,
+                surname: req.body.tranier.surname,
+                name: req.body.tranier.name,
+                dob: req.body.tranier.dob,
+                flatno: req.body.tranier.flatno,
+                street: req.body.tranier.street,
+                area: req.body.tranier.area,
+                locality: req.body.tranier.locality,
+                city: req.body.tranier.city,
+                pincode: req.body.tranier.pincode,
+                state: req.body.tranier.state,
                 specialization: req.body.tranier.specialization,
                 certification: req.body.tranier.certification,
                 tagline: req.body.tranier.tagline,
@@ -683,7 +717,7 @@ module.exports = {
                 username: req.body.user.username,
                 email: req.body.user.email,
                 phonenumber: req.body.user.phonenumber,
-               
+                officenumber: req.body.user.officenumber,
             }
         )
             .then((trainer) => {
