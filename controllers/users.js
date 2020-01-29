@@ -385,36 +385,50 @@ module.exports = {
     async UpdateUser(req, res) {
         console.log(req.body);
 
-        // const body = {
-        //     username: req.body.username,
-        //     email: req.body.email,
-        //     phonenumber: req.body.phonenumber,
-        //     user: req.user._id,
-        // };
-        // console.log(body);
+        await user.findOne({ _id: req.body._id }).than((OldData) => {
+            DbBackup.create({
+                oldData: OldData,
+                loginuser: req.user,
+                newData: req.body,
+                dbtable: 'user',
+                where: {
+                    _id: req.body._id,
+                }
+            });
+            // const body = {
+            //     username: req.body.username,
+            //     email: req.body.email,
+            //     phonenumber: req.body.phonenumber,
+            //     user: req.user._id,
+            // };
+            // console.log(body);
 
-        let result = await User.updateMany(
-            {
+            User.updateMany(
+                {
 
-                _id: req.body._id,
+                    _id: req.body._id,
 
-            }, {
-            username: req.body.username,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            address: req.body.address,
-            age: req.body.age
-        }
-        )
-            .then((user) => {
-                res.status(httpStatus.OK).json({ message: 'Updated User', user });
+                }, {
+                username: req.body.username,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                address: req.body.address,
+                age: req.body.age
             }
             )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
-            });
+                .then((user) => {
+                    res.status(httpStatus.OK).json({ message: 'Updated User', user });
+                }
+                )
+                .catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
+
+        });
+
+
     },
     async ChangePassword(req, res) {
         const schema = Joi.object().keys({
@@ -546,51 +560,62 @@ module.exports = {
     // updating gyms / gym profiles
     async UpdateGymProfile(req, res) {
         console.log(req.body);
+        await gym.findOne({ _id: req.params.id, }).than((oldData) => {
+            DbBackup.create({
+                oldData: OldData,
+                loginuser: req.user,
+                newData: req.body,
+                dbtable: 'gym',
+                where: {
+                    _id: req.body.data.gymid,
+                }
+            });
+            // const body = {
+            //     gymname: req.body.gymname,
+            //     email: req.body.email,
+            //     phonenumber: req.body.phonenumber,
+            //     user: req.user._id,
+            // };
+            // console.log(body);
 
-        // const body = {
-        //     gymname: req.body.gymname,
-        //     email: req.body.email,
-        //     phonenumber: req.body.phonenumber,
-        //     user: req.user._id,
-        // };
-        // console.log(body);
+            Gym.updateMany(
+                {
 
-        let result = await Gym.updateMany(
-            {
+                    _id: req.params.id,
 
-                _id: req.params.id,
-
-            }, {
-            gymname: req.body.gymname,
-            ownernme: req.body.ownername,
-            email: req.body.email,
-            phonenumber: req.body.phonenumber,
-            gymdec: req.body.gymdec,
-            gymtag: req.body.gymtag,
-            officenumber: req.body.officenumber,
-            accountnumber: req.body.accountnumber,
-            bankname: req.body.bankname,
-            ifsccode: req.body.ifsccode,
-            holdername: req.body.holdername,
-            flatno: req.body.flatno,
-            street: req.body.street,
-            area: req.body.area,
-            locality: req.body.locality,
-            city: req.body.city,
-            pincode: req.body.pincode,
-            state: req.body.state,
-            gst: req.body.gst,
-        }
-        )
-            .then((gym) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+                }, {
+                gymname: req.body.gymname,
+                ownernme: req.body.ownername,
+                email: req.body.email,
+                phonenumber: req.body.phonenumber,
+                gymdec: req.body.gymdec,
+                gymtag: req.body.gymtag,
+                officenumber: req.body.officenumber,
+                accountnumber: req.body.accountnumber,
+                bankname: req.body.bankname,
+                ifsccode: req.body.ifsccode,
+                holdername: req.body.holdername,
+                flatno: req.body.flatno,
+                street: req.body.street,
+                area: req.body.area,
+                locality: req.body.locality,
+                city: req.body.city,
+                pincode: req.body.pincode,
+                state: req.body.state,
+                gst: req.body.gst,
             }
             )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
-            });
+                .then((gym) => {
+                    res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+                }
+                )
+                .catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
+        });
+
     },
     // getting all gyms
     async GetAllGyms(req, res) {
@@ -681,57 +706,81 @@ module.exports = {
     // Updating the trainer profile
     async UpdateTrainerPofile(req, res) {
         console.log(req.body);
-
-
-        let result = await Trainer.updateMany(
-            {
-                user: req.params.id,
-
-            },
-            {
-                // username: req.body.username,
-                // email: req.body.email,
-                // phonenumber: req.body.phonenumber,
-                // age: req.body.trainer.age,
-                // address: req.body.tranier.address,
-                surname: req.body.tranier.surname,
-                name: req.body.tranier.name,
-                dob: req.body.tranier.dob,
-                flatno: req.body.tranier.flatno,
-                street: req.body.tranier.street,
-                area: req.body.tranier.area,
-                locality: req.body.tranier.locality,
-                city: req.body.tranier.city,
-                pincode: req.body.tranier.pincode,
-                state: req.body.tranier.state,
-                specialization: req.body.tranier.specialization,
-                certification: req.body.tranier.certification,
-                tagline: req.body.tranier.tagline,
-                experience: req.body.tranier.experience,
-                languages: req.body.tranier.languages,
-            }
-        )
-        await User.updateMany(
-            {
-                _id: req.params.id,
-
-            },
-            {
-                username: req.body.user.username,
-                email: req.body.user.email,
-                phonenumber: req.body.user.phonenumber,
-                officenumber: req.body.user.officenumber,
-            }
-        )
-            .then((trainer) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
-            }
-            )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
+        await Trainer.findOne({user: req.params.id }).than((trainerData) => {
+            User.findOne({ _id: req.params.id }).than((userData) => {
+                DbBackup.create({
+                    oldData: { user: userData, trainer: trainerData },
+                    loginuser: req.user,
+                    newData: req.body,
+                    dbtable: 'trainer , user',
+                    where: {
+                        userId: req.params.id, trainerId: req.params.id,
+                    }
+                });
             });
+
+            Trainer.updateMany(
+                {
+                    user: req.params.id,
+
+                },
+                {
+                    // username: req.body.username,
+                    // email: req.body.email,
+                    // phonenumber: req.body.phonenumber,
+                    // age: req.body.trainer.age,
+                    // address: req.body.tranier.address,
+                    surname: req.body.tranier.surname,
+                    name: req.body.tranier.name,
+                    dob: req.body.tranier.dob,
+                    flatno: req.body.tranier.flatno,
+                    street: req.body.tranier.street,
+                    area: req.body.tranier.area,
+                    locality: req.body.tranier.locality,
+                    city: req.body.tranier.city,
+                    pincode: req.body.tranier.pincode,
+                    state: req.body.tranier.state,
+                    specialization: req.body.tranier.specialization,
+                    certification: req.body.tranier.certification,
+                    tagline: req.body.tranier.tagline,
+                    experience: req.body.tranier.experience,
+                    languages: req.body.tranier.languages,
+                }
+            )
+            User.updateMany(
+                {
+                    _id: req.params.id,
+
+                },
+                {
+                    username: req.body.user.username,
+                    email: req.body.user.email,
+                    phonenumber: req.body.user.phonenumber,
+                    officenumber: req.body.user.officenumber,
+                }
+            )
+                .then((trainer) => {
+                    res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+                }
+                )
+                .catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
+
+
+        }).then((trainer) => {
+            res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
+        }
+        )
+        .catch(err => {
+            res
+                .status(httpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: err });
+        });;
+
+
     },
     async UpdateGymWorkingHours(req, res) {
         console.log(req.body);
