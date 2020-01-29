@@ -706,8 +706,8 @@ module.exports = {
     // Updating the trainer profile
     async UpdateTrainerPofile(req, res) {
         console.log(req.body);
-        await Trainer.findOne({user: req.params.id }).than((trainerData) => {
-            User.findOne({ _id: req.params.id }).than((userData) => {
+        await User.findOne({ _id: req.params.id }).then((userData) => {
+            Trainer.findOne({ user: req.params.id }).then((trainerData) => {
                 DbBackup.create({
                     oldData: { user: userData, trainer: trainerData },
                     loginuser: req.user,
@@ -770,15 +770,10 @@ module.exports = {
                 });
 
 
-        }).then((trainer) => {
-            res.status(httpStatus.OK).json({ message: 'Updated Trainer', trainer });
         }
-        )
-        .catch(err => {
-            res
-                .status(httpStatus.INTERNAL_SERVER_ERROR)
-                .json({ message: err });
-        });;
+        ).catch(err => {
+                console.log(err);
+        });
 
 
     },
@@ -839,12 +834,22 @@ module.exports = {
             })
     },
     async GetPrising(req, res) {
-        await Pricing.findOne({ user: req.user._id })
-            .then((result) => {
-                res.status(httpStatus.OK).json({ message: 'All Pricing', result });
-            }).catch(err => {
-                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
-            })
+        if (req.user.role == 'admin') {
+            await Pricing.find()
+                .then((result) => {
+                    res.status(httpStatus.OK).json({ message: 'All Pricing', result: result, role: req.user.role });
+                }).catch(err => {
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+                })
+        } else {
+            await Pricing.find({ user: req.user._id })
+                .then((result) => {
+                    res.status(httpStatus.OK).json({ message: 'All Pricing', result: result, role: req.user.role });
+                }).catch(err => {
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+                })
+        }
+
     },
     async UpdatingGymServices(req, res) {
 
