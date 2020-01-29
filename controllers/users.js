@@ -8,6 +8,7 @@ const Gym = require('../models/gymModels');
 const Trainer = require('../models/trainerModels');
 const Service = require('../models/serviceModels');
 const Pricing = require('../models/pricingModels');
+const DbBackup = require('../models/databackupModels');
 
 
 module.exports = {
@@ -520,6 +521,7 @@ module.exports = {
             bankname: req.body.bankname,
             ifsccode: req.body.ifsccode,
             holdername: req.body.holdername,
+            gst: req.body.gst,
             timings: req.body.timings
         };
         // console.log(body);
@@ -560,7 +562,7 @@ module.exports = {
 
             }, {
             gymname: req.body.gymname,
-            ownernme:req.body.ownername,
+            ownernme: req.body.ownername,
             email: req.body.email,
             phonenumber: req.body.phonenumber,
             gymdec: req.body.gymdec,
@@ -577,6 +579,7 @@ module.exports = {
             city: req.body.city,
             pincode: req.body.pincode,
             state: req.body.state,
+            gst: req.body.gst,
         }
         )
             .then((gym) => {
@@ -795,23 +798,92 @@ module.exports = {
             })
     },
     async UpdatingGymServices(req, res) {
-        await Gym.updateMany(
-            {
 
-                _id: req.body.data.gymid,
+        console.log(req.body);
+        await Gym.findOne({ _id: req.body.data.gymid }).then((OldData) => {
+            let adding = req.body.data.services.filter(item => OldData.services.map(function (e) { return e._id; }).indexOf(item._id) < 0);
+            let missing = OldData.services.filter(item => req.body.data.services.map(function (e) { return e.name; }).indexOf(item.name) < 0);
+            if (adding.length > 0) {
+                console.log(adding);
+                adding.forEach(element => {
+                    Pricing.updateMany(
+                        {
+                            gym: req.body.data.gymid,
+                        }, {
+                        $push: {
+                            servicesprices: {
+                                service: element,
+                                servicename: element.name
+                            }
+                        }
+                    }
+                    ).then((pricing1) => {
+                        console.log(pricing1);
+                    }
+                    )
+                        .catch(err => {
+                            console.log(err);
 
-            }, {
-            services: req.body.data.services
-        }
-        )
-            .then((gym) => {
-                res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+                        });
+                });
+
+            }
+            if (missing.length) {
+                console.log(missing);
+                missing.forEach(element => {
+                    Pricing.updateMany(
+                        {
+                            gym: req.body.data.gymid,
+                        }, {
+                        $pull: {
+                            servicesprices: {
+                                service: element._id
+                            }
+                        }
+                    }
+                    ).then((pricing1) => {
+                        console.log(pricing1);
+                    }
+                    )
+                        .catch(err => {
+                            console.log(err);
+
+                        });
+                });
+
+            }
+
+            DbBackup.create({
+                oldData: OldData,
+                loginuser: req.user,
+                newData: req.body,
+                dbtable: 'gym',
+                where: {
+                    _id: req.body.data.gymid,
+                }
+            });
+            Gym.updateMany(
+                {
+
+                    _id: req.body.data.gymid,
+
+                }, {
+                services: req.body.data.services
             }
             )
-            .catch(err => {
-                res
-                    .status(httpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ message: err });
-            });
+                .then((gym) => {
+                    res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+                }
+                )
+                .catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
+
+        });
+
+
+
     }
 }

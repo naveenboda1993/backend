@@ -34,6 +34,7 @@ const gymmodel = {
     bankname: { type: String },
     ifsccode: { type: String },
     holdername: { type: String },
+    gst: { type: String },
     timings: { type: String },
     phonenumber: { type: Number },
     officenumber: { type: Number },
