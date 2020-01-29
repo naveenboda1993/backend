@@ -11,7 +11,7 @@ const pricingModel = {
     twomonth: { type: String, default: '1000' },
     threemonth: { type: String, default: '3000' },
     sixmonth: { type: String, default: '6000' },
-    twelevemonth: { type: String, default: '12000' },
+    twelvemonth: { type: String, default: '12000' },
     twofourmonth: { type: String, default: '24000' },
     servicesprices: [{
         service: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' },
