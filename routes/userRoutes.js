@@ -52,6 +52,7 @@ router.post('/addservice', AuthHelper.VerifyToken, UserCtrl.AddServices);
 router.get('/getservice', AuthHelper.VerifyToken, UserCtrl.GetServices);
 router.get('/getpricing', AuthHelper.VerifyToken, UserCtrl.GetPrising);
 router.post('/updatinggymservices', AuthHelper.VerifyToken, UserCtrl.UpdatingGymServices);
+router.post('/updatearray', AuthHelper.VerifyToken, UserCtrl.UpdateArray);
 
 
 

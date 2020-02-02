@@ -9,6 +9,7 @@ const Trainer = require('../models/trainerModels');
 const Service = require('../models/serviceModels');
 const Pricing = require('../models/pricingModels');
 const DbBackup = require('../models/databackupModels');
+const ArraysStates = require('../models/statescityareaModels');
 
 
 module.exports = {
@@ -258,7 +259,7 @@ module.exports = {
                 phonenumber: req.body.phonenumber,
                 officenumber: req.body.officenumber,
                 age: req.body.age,
-                address: req.body.address,               
+                address: req.body.address,
                 language: req.body.language,
                 role: 'trainer',
                 password: hash
@@ -282,7 +283,7 @@ module.exports = {
                         workinghours: workinghours,
                         flatno: req.body.flatno,
                         street: req.body.street,
-                        area: req.body.area,        
+                        area: req.body.area,
                         locality: req.body.locality,
                         city: req.body.city,
                         pincode: req.body.pincode,
@@ -785,7 +786,7 @@ module.exports = {
 
         }
         ).catch(err => {
-                console.log(err);
+            console.log(err);
         });
 
 
@@ -981,5 +982,50 @@ module.exports = {
 
 
 
-    }
+    },
+    // Updating Sates, Cities and areas
+    async UpdateArray(req, res) {
+        console.log(req.body);
+        // const defalutareas = [{ id: 1, name: 'Your Area', cities: 'Your City', states: 'Your State' }];// const areas = [{ name: '', cities: '', states: '', }];
+        // cities = [{ name: '', states: '', }];
+        // states = [{ name: '' }];
+        const defalutareas = { states: [{ name: 'Telagana' }, { name: 'Andra pradesh' }, { name: 'Arunachal Pradesh' }, { name: 'Assam' }, { name: 'Bihar' }, { name: 'Chhattisgarh' }, { name: 'Goa' }, { name: 'Gujarat' }, { name: 'Haryana' }, { name: 'Himachal Pradesh' }, { name: 'Jammu and Kashmir' }, { name: 'Jharkhand' }, { name: 'Karnataka' }, { name: 'Kerala' }, { name: 'Madya Pradesh' }, { name: 'Maharashtra' }, { name: 'Manipur' }, { name: 'Meghalaya' }, { name: 'Mizoram' }, { name: 'Nagaland' }, { name: 'Orissa' }, { name: 'Punjab' }, { name: 'Rajasthan' }, { name: 'Sikkim' }, { name: 'Tamil Nadu' }, { name: 'Tripura' }, { name: 'Uttaranchal' }, { name: 'Kolkata' }, { name: 'West Bengal' }, { name: 'Uttar Pradesh' }] };
+        req.body.areas.forEach(element => {
+            console.log(element);
+        });
+            await ArraysStates.updateMany(
+                { "_id": "5e36b2f20e112a4a909256f1" },
+                {
+                    $push: {
+                        // states: {
+                        //     name: req.body.states.name,
+                        // },
+                        // cities: {
+                        //     name: req.body.cities.name,
+                        //     state: req.body.cities.state,
+                        // },
+                        areas: req.body.areas
+                    }
+                    // $set:
+                    // {
+                    //     "states.$.name": req.body.states.name,
+                    //     "cities.$.name": req.body.cities.name,
+                    //     "cities.$.state": req.body.cities.state,
+                    //     "areas.$.name": req.body.areas.name,
+                    //     "areas.$.city": req.body.areas.city,
+                    //     "areas.$.state": req.body.areas.state,
+                    // }
+                }).then((arrays) => {
+                    res.status(httpStatus.OK).json({ message: 'Updated state', arrays });
+                }
+                )
+                .catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                })
+
+       
+
+    },
 }
