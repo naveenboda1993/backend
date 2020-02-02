@@ -30,6 +30,20 @@ const trainerModel = {
             imgVersion: { type: String, default: '' }
         }
     ],
+    workinghours: [{
+        day: { type: String },
+        duration: { type: String },
+        multiplebookings: { type: String },
+        numberofbookings: { type: String },
+        status: { type: String },
+        slots: [
+            {
+                id: { type: String },
+                starting: { type: String },
+                ending: { type: String },
+            }
+        ],
+    }]
 }
 const trainerSchema = mongoose.Schema(trainerModel);
 

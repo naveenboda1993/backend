@@ -19,6 +19,8 @@ router.get('/userrole', AuthHelper.VerifyToken, UserCtrl.userrole);
 router.get('/getgymowner', AuthHelper.VerifyToken, UserCtrl.GetGymOwner);
 // getting role trainers from usersdb
 router.get('/gettrainer', AuthHelper.VerifyToken, UserCtrl.GetTrainer);
+// getting all Trainers
+router.get('/getalltrainer', AuthHelper.VerifyToken, UserCtrl.GetAllTrainers);
 // getting one trianer 
 router.get('/gettrainerone/:id', AuthHelper.VerifyToken, UserCtrl.GetTrainerOne);
 // getting one gym owner
@@ -30,7 +32,10 @@ router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile)
 router.post('/creategymprofile', AuthHelper.VerifyToken, UserCtrl.CreateGymProfile);
 // update gym profile
 router.post('/updategymprofile/:id', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfile);
+// Updating Gym Working Timings
 router.post('/updategymworkinghours', AuthHelper.VerifyToken, UserCtrl.UpdateGymWorkingHours);
+// Updating Trainer Working Timings
+router.post('/updatetrainerworkinghours', AuthHelper.VerifyToken, UserCtrl.UpdateTrainerWorkingHours);
 // getting all gyms
 router.get('/getallgyms', AuthHelper.VerifyToken, UserCtrl.GetAllGyms);
 

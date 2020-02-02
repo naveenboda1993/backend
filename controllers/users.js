@@ -244,17 +244,21 @@ module.exports = {
                     .status(httpStatus.BAD_REQUEST)
                     .json({ message: 'ERROR HASHING PASSWORD' });
             }//if there is any error in password hashing return that error, if not exceute the below
+            const defaulttimings = [{ id: 1, starting: "10:30 AM", ending: "09:00 PM" }];
+            const workinghours = [{ day: 'monday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings }];
+            workinghours.push({ day: 'tuesday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+            workinghours.push({ day: 'wednesday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+            workinghours.push({ day: 'thursday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+            workinghours.push({ day: 'friday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+            workinghours.push({ day: 'saturday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+            workinghours.push({ day: 'sunday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
             const body = {
                 username: req.body.username,
                 email: req.body.email,
                 phonenumber: req.body.phonenumber,
                 officenumber: req.body.officenumber,
                 age: req.body.age,
-                address: req.body.address,
-                // certification: req.body.certification,
-                // specialization: req.body.specialization,
-                // tagline: req.body.tagline,
-                // experience: req.body.experience,                
+                address: req.body.address,               
                 language: req.body.language,
                 role: 'trainer',
                 password: hash
@@ -275,10 +279,10 @@ module.exports = {
                         ifsccode: req.body.ifsccode,
                         holdername: req.body.holdername,
                         age: req.body.age,
-                        // address: req.body.address,
+                        workinghours: workinghours,
                         flatno: req.body.flatno,
                         street: req.body.street,
-                        area: req.body.area,
+                        area: req.body.area,        
                         locality: req.body.locality,
                         city: req.body.city,
                         pincode: req.body.pincode,
@@ -498,6 +502,15 @@ module.exports = {
             .populate('notifications.senderId')
             .then((result) => {
                 res.status(httpStatus.OK).json({ message: 'trainer', result });
+            }).catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
+    // getting all trainers
+    async GetAllTrainers(req, res) {
+        await Trainer.find()
+            .then((result) => {
+                res.status(httpStatus.OK).json({ message: 'All Trainers', result });
             }).catch(err => {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
@@ -798,6 +811,35 @@ module.exports = {
         )
             .then((gym) => {
                 res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+    },
+    async UpdateTrainerWorkingHours(req, res) {
+        console.log(req.body);
+
+        // console.log(body);
+        await Trainer.updateMany(
+            {
+                "workinghours._id": req.body.trainer.selectdatevalue._id
+            },
+            {
+                $set:
+                {
+                    "workinghours.$.duration": req.body.trainer.selectdatevalue.duration,
+                    "workinghours.$.multiplebookings": req.body.trainer.selectdatevalue.multiplebookings,
+                    "workinghours.$.numberofbookings": req.body.trainer.selectdatevalue.numberofbookings,
+                    "workinghours.$.status": req.body.trainer.selectdatevalue.status,
+                    "workinghours.$.slots": req.body.trainer.timings,
+                }
+            }
+        )
+            .then((trainer) => {
+                res.status(httpStatus.OK).json({ message: 'Updated trainer', trainer });
             }
             )
             .catch(err => {
