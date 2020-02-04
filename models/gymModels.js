@@ -3,10 +3,11 @@ const serviceModels = require('../models/serviceModels');
 
 const gymmodel = {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    gymname: { type: String },
-    ownername: { type: String },
+    gymname: { type: String, default: '' },
+    ownername: { type: String, default: '' },
     gymdec: { type: String, default: '' },
     gymtag: { type: String, default: '' },
+    terms: { type: String, default: '' },
     services: [{
         name: { type: String, default: '' },
         servicedec: { type: String, default: '' },
@@ -21,8 +22,8 @@ const gymmodel = {
             }
         ],
     }],
-    gymcategory: { type: String },
-    flatno: { type: String },
+    gymcategory: { type: String , default: '' },
+    flatno: { type: String , default: '' },
     street: { type: String },
     area: { type: String },
     locality: { type: String },

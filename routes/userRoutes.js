@@ -32,6 +32,7 @@ router.get('/getgymprofile/:id', AuthHelper.VerifyToken, UserCtrl.GetGymProfile)
 router.post('/creategymprofile', AuthHelper.VerifyToken, UserCtrl.CreateGymProfile);
 // update gym profile
 router.post('/updategymprofile/:id', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfile);
+router.post('/finishgym', AuthHelper.VerifyToken, UserCtrl.FinishGym);
 // Updating Gym Working Timings
 router.post('/updategymworkinghours', AuthHelper.VerifyToken, UserCtrl.UpdateGymWorkingHours);
 // Updating Trainer Working Timings
@@ -51,6 +52,7 @@ router.post('/addservice', AuthHelper.VerifyToken, UserCtrl.AddServices);
 // getting services
 router.get('/getservice', AuthHelper.VerifyToken, UserCtrl.GetServices);
 router.get('/getpricing', AuthHelper.VerifyToken, UserCtrl.GetPrising);
+router.post('/updateprice', AuthHelper.VerifyToken, UserCtrl.UpdatePrice);
 router.post('/updatinggymservices', AuthHelper.VerifyToken, UserCtrl.UpdatingGymServices);
 router.post('/updatearray', AuthHelper.VerifyToken, UserCtrl.UpdateArray);
 

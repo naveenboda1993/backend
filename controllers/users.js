@@ -15,87 +15,115 @@ const ArraysStates = require('../models/statescityareaModels');
 module.exports = {
 
     async Gymowner(req, res) {
+        console.log("Gym creation start");
         console.log(req.body);
-        const schema = Joi.object().keys({
-            username: Joi.string()
-                .min(3)
-                .max(30)
-                .required(),
-            phonenumber: Joi.string()
-                .min(3)
-                .max(30)
-                .required(),
-            email: Joi.string()
-                .email()
-                .required(),
-            age: Joi.string()
-                .required(),
-            address: Joi.string()
-                .min(1)
-                .max(50)
-                .required(),
-            password: Joi.string()
-                .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
-        });
-
-
-        const { error, value } = schema.validate(req.body);
-        // console.log(value);
-        if (error && error.details) {
-            return res
-                .status(httpStatus.BAD_REQUEST)
-                .json({ issucess: false, msg: error.details });
-        }
-        // else{
-
-        //     return res.status(500).json({issucess:true,message:"successfully email validate" });
-        // }
-
-        // const userEmail = await User.findOne({
-        //     email: Helpers.lowerCase(req.body.email)
+        // const schema = Joi.object().keys({
+        //     username: Joi.string()
+        //         .min(3)
+        //         .max(30)
+        //         .required(),
+        //     phonenumber: Joi.string()
+        //         .min(3)
+        //         .max(30)
+        //         .required(),
+        //     email: Joi.string()
+        //         .email()
+        //         .required(),
+        //     age: Joi.string()
+        //         .required(),
+        //     password: Joi.string()
+        //         .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
         // });
-        // if (userEmail) {
+
+
+        // const { error, value } = schema.validate(req.body);
+        // // console.log(value);
+        // if (error && error.details) {
         //     return res
-        //         .status(httpStatus.CONFLICT)
-        //         .json({ message: 'Email already exist' });
-
+        //         .status(httpStatus.BAD_REQUEST)
+        //         .json({ issucess: false, msg: error.details });
         // }
-
-        // const role = await User.findOne({
-        //     role: Helpers.firstUppercase(req.body.role)
-        // });
-        // if (role) {
-        //     return res
-        //         .status(httpStatus.CONFLICT)
-        //         .json({ message: 'role must be add' });
-
-        // }
-        return bcrypt.hash(value.password, 10, (err, hash) => {
+        return bcrypt.hash(req.body.password, 10, (err, hash) => {
             if (err) {
                 return res
                     .status(httpStatus.BAD_REQUEST)
                     .json({ message: 'ERROR HASHING PASSWORD' });
             }//if there is any error in password hashing return that error, if not exceute the below
+            console.log("Gym hash start");
+
             const body = {
-                username: Helpers.firstUppercase(value.username),
-                email: Helpers.lowerCase(value.email),
+                username: Helpers.firstUppercase(req.body.username),
+                email: Helpers.lowerCase(req.body.email),
                 phonenumber: req.body.phonenumber,
                 age: req.body.age,
-                address: req.body.address,
+                address: '',
                 role: 'gymowner',
                 password: hash
             };//new object is created, created all those mentioned 
+            console.log("Gym hash body");
             User.create(body)//mongoose create method
                 .then((
-                    user) => {
-                    res.status(httpStatus.OK).json({ message: 'User created', user });
+                    gymOwneruser) => {
+                    console.log(gymOwneruser);
+                    const defaulttimings = [{ id: 1, starting: "10:30 AM", ending: "09:00 PM" }];
+                    const workinghours = [{ day: 'monday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings }];
+                    workinghours.push({ day: 'tuesday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+                    workinghours.push({ day: 'wednesday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+                    workinghours.push({ day: 'thursday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+                    workinghours.push({ day: 'friday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+                    workinghours.push({ day: 'saturday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+                    workinghours.push({ day: 'sunday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+                    const gymbody = {
+                        email: req.body.email,
+                        ownername: req.body.ownername,
+                        gymname: req.body.gymname,
+                        phonenumber: req.body.phonenumber,
+                        officenumber: req.body.officenumber,
+                        user: gymOwneruser._id,
+                        gymtag: req.body.tag,
+                        services: [],
+                        gymdec: req.body.discripition,
+                        flatno: req.body.flatno,
+                        street: req.body.street,
+                        area: req.body.area,
+                        locality: req.body.locality,
+                        city: req.body.city,
+                        pincode: req.body.pincode,
+                        state: req.body.state,
+                        workinghours: workinghours,
+                        // accountnumber: req.body.accountnumber,
+                        // bankname: req.body.bankname,
+                        // ifsccode: req.body.ifsccode,
+                        // holdername: req.body.holdername,
+                        gst: req.body.gst,
+                        timings: req.body.timings
+                    };
+                    // console.log(body);
+                    Gym.create(gymbody)
+                        .then((gym) => {
+                            Pricing.create({ user: gymOwneruser._id, gym: gym._id }).then((pricing) => {
+
+                                res.status(httpStatus.OK).json({ message: 'Gym created', gym, gymid: gym._id });
+                            }).catch(err => {
+                                res
+                                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                                    .json({ message: err, path: "pricing create" });
+                            });
+                        }
+                        )
+                        .catch(err => {
+                            res
+                                .status(httpStatus.INTERNAL_SERVER_ERROR)
+                                .json({ message: err, path: "gym create" });
+                        });
+
+                    // res.status(httpStatus.OK).json({ message: 'User created', user: gymOwneruser });
                 }
-                ) //SAVE IN THE DATABASE
-                .catch(err => {
+                ).catch(err => {
                     res
                         .status(httpStatus.INTERNAL_SERVER_ERROR)
-                        .json({ message: err });
-                });
+                        .json({ message: err, path: "user create" });
+                }); //SAVE IN THE DATABASE
         });
     },
     async Trainer(req, res) {
@@ -631,6 +659,31 @@ module.exports = {
         });
 
     },
+    // updating gyms / gym profiles
+    async FinishGym(req, res) {
+        console.log(req.body);
+
+
+        Gym.updateMany(
+            {
+
+                _id: req.body.id,
+
+            }, {
+            terms: "agree"
+        }
+        )
+            .then((gym) => {
+                res.status(httpStatus.OK).json({ message: 'Finish Gym', gym });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+
+    },
     // getting all gyms
     async GetAllGyms(req, res) {
         await Gym.find()
@@ -656,7 +709,7 @@ module.exports = {
         if (req.user.role == 'admin') {
             await Gym.find()
                 .then((result) => {
-                    res.status(httpStatus.OK).json({ message: 'All gyms', result });
+                    res.status(httpStatus.OK).json({ message: 'All Admin gyms', result });
                 }).catch(err => {
                     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
                 })
@@ -894,6 +947,49 @@ module.exports = {
         }
 
     },
+    async UpdatePrice(req, res) {
+        console.log(req.body);
+        await Pricing.findOne({ _id: req.body._id }).then((OldData) => {
+            DbBackup.create({
+                oldData: OldData,
+                loginuser: req.user,
+                newData: req.body,
+                dbtable: 'pricing',
+                where: {
+                    _id: req.body._id,
+                }
+            });
+            Pricing.updateMany(
+                {
+
+                    _id: req.body._id,
+
+                }, {
+                isvip: req.body.isvip,
+                isbudget: req.body.isbudget,
+                ispremium: req.body.ispremium,
+                onemonth: req.body.onemonth,
+                twomonth: req.body.twomonth,
+                threemonth: req.body.threemonth,
+                sixmonth: req.body.sixmonth,
+                twelvemonth: req.body.twelvemonth,
+                twofourmonth: req.body.twofourmonth,
+                servicesprices: req.body.servicesprices
+            }
+            )
+                .then((gym) => {
+                    res.status(httpStatus.OK).json({ message: 'Updated Gym', gym });
+                }
+                )
+                .catch(err => {
+                    res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
+
+        });
+
+    },
     async UpdatingGymServices(req, res) {
 
         console.log(req.body);
@@ -925,7 +1021,7 @@ module.exports = {
                 });
 
             }
-            if (missing.length) {
+            if (missing.length > 0) {
                 console.log(missing);
                 missing.forEach(element => {
                     Pricing.updateMany(
@@ -993,39 +1089,39 @@ module.exports = {
         req.body.areas.forEach(element => {
             console.log(element);
         });
-            await ArraysStates.updateMany(
-                { "_id": "5e36b2f20e112a4a909256f1" },
-                {
-                    $push: {
-                        // states: {
-                        //     name: req.body.states.name,
-                        // },
-                        // cities: {
-                        //     name: req.body.cities.name,
-                        //     state: req.body.cities.state,
-                        // },
-                        areas: req.body.areas
-                    }
-                    // $set:
-                    // {
-                    //     "states.$.name": req.body.states.name,
-                    //     "cities.$.name": req.body.cities.name,
-                    //     "cities.$.state": req.body.cities.state,
-                    //     "areas.$.name": req.body.areas.name,
-                    //     "areas.$.city": req.body.areas.city,
-                    //     "areas.$.state": req.body.areas.state,
-                    // }
-                }).then((arrays) => {
-                    res.status(httpStatus.OK).json({ message: 'Updated state', arrays });
+        await ArraysStates.updateMany(
+            { "_id": "5e36b2f20e112a4a909256f1" },
+            {
+                $push: {
+                    // states: {
+                    //     name: req.body.states.name,
+                    // },
+                    // cities: { 
+                    //     name: req.body.cities.name,
+                    //     state: req.body.cities.state,
+                    // },
+                    areas: req.body.areas
                 }
-                )
-                .catch(err => {
-                    res
-                        .status(httpStatus.INTERNAL_SERVER_ERROR)
-                        .json({ message: err });
-                })
+                // $set:
+                // {
+                //     "states.$.name": req.body.states.name,
+                //     "cities.$.name": req.body.cities.name,
+                //     "cities.$.state": req.body.cities.state,
+                //     "areas.$.name": req.body.areas.name,
+                //     "areas.$.city": req.body.areas.city,
+                //     "areas.$.state": req.body.areas.state,
+                // }
+            }).then((arrays) => {
+                res.status(httpStatus.OK).json({ message: 'Updated state', arrays });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            })
 
-       
+
 
     },
 }
