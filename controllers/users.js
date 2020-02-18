@@ -281,6 +281,8 @@ module.exports = {
             workinghours.push({ day: 'friday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
             workinghours.push({ day: 'saturday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
             workinghours.push({ day: 'sunday', duration: '10', multiplebookings: 'Yes', numberofbookings: 10, status: 'Enable', slots: defaulttimings });
+            const defaultnames = [{ id: '', name: '' }]; 
+            const documents = [{ docId: '', docName: 'Aadhaar Card' }, { docId: '', docName: 'Fitness Certification ' }, { docId: '', docName: 'Higher Study Certificate' }, { docId: '', docName: 'Pan Card' }, { docId: '', docName: 'Driving Licence' }];
             const body = {
                 username: req.body.username,
                 email: req.body.email,
@@ -309,6 +311,7 @@ module.exports = {
                         holdername: req.body.holdername,
                         age: req.body.age,
                         workinghours: workinghours,
+                        documents:documents,
                         flatno: req.body.flatno,
                         street: req.body.street,
                         area: req.body.area,
@@ -1121,7 +1124,13 @@ module.exports = {
                     .json({ message: err });
             })
 
-
-
+    },
+    async GetAreas(req, res) {
+        await ArraysStates.findOne().then((areas) => {
+            res.status(httpStatus.OK).json({ message: 'all areas', areas });
+        })
+            .catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
     },
 }

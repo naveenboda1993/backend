@@ -30,6 +30,12 @@ const trainerModel = {
             imgVersion: { type: String, default: '' }
         }
     ],
+    documents: [
+        {
+            docId: { type: String, default: '' },
+            docName: { type: String, default: '' }
+        }
+    ],
     workinghours: [{
         day: { type: String },
         duration: { type: String },
