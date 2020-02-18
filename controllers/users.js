@@ -52,7 +52,7 @@ module.exports = {
             console.log("Gym hash start");
 
             const body = {
-                username: Helpers.firstUppercase(req.body.username),
+                username: req.body.username,
                 email: Helpers.lowerCase(req.body.email),
                 phonenumber: req.body.phonenumber,
                 age: req.body.age,
@@ -322,7 +322,7 @@ module.exports = {
                         user: userResult._id,
                         id: req.body.id,
                     }).then((trainer) => {
-                        res.status(httpStatus.OK).json({ message: 'Trainer created', user: userResult, trainer });
+                        res.status(httpStatus.OK).json({ message: 'Trainer created', user: userResult, trainer,trainerid:userResult._id });
 
                     })
                 }
