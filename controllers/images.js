@@ -64,6 +64,30 @@ module.exports = {
             );
         });
     },
+    UploadDocuments(req, res) {
+        cloudinary.uploader.upload(req.body.documents, async result => {
+            await trainer.updateMany(
+                {
+                    _id: req.body.id
+                },
+                {
+                    $push: {
+                        documents: {
+                            docId: result.public_id,
+                            docName: result.name,
+                            status: 'visible'
+                        }
+                    }
+                }
+            ).then(() => res
+                .status(HttpStatus.OK)
+                .json({ messgae: 'Document Uploaded Sucessfully' })
+            ).catch(err => res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: 'Error Occurred while uploading the document' })
+            );
+        });
+    },
 
     async SetDefaultImage(req, res) {
         const { imgId, imgVersion } = req.params;
@@ -85,7 +109,7 @@ module.exports = {
         );
     },
     async SetGymVisibleImage(req, res) {
-        const {imgId,imageStatus} = req.params;
+        const { imgId, imageStatus } = req.params;
         await Gym.updateMany(
             {
                 'images._id': imgId
@@ -100,7 +124,7 @@ module.exports = {
         ).then(() =>
             res
                 .status(HttpStatus.OK)
-                .json({ message: imageStatus+' image is set' })
+                .json({ message: imageStatus + ' image is set' })
         ).catch(err => res
             .status(HttpStatus.INTERNAL_SERVER_ERROR).
             json({ message: 'Error Occurred' })

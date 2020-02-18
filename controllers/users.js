@@ -1133,4 +1133,12 @@ module.exports = {
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
             })
     },
+    async GetNames(req, res) {
+        await trainer.findOne().then((names) => {
+            res.status(httpStatus.OK).json({ message: 'Upload Documents names', names });
+        })
+            .catch(err => {
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error Occurred' });
+            })
+    },
 }
