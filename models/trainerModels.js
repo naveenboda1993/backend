@@ -23,7 +23,8 @@ const trainerModel = {
     accountnumber: { type: String, default: '' },    
     bankname: { type: String, default: '' },    
     ifsccode: { type: String, default: '' },    
-    holdername: { type: String, default: '' },    
+    holdername: { type: String, default: '' }, 
+    terms: { type: String, default: '' },
     images: [
         {
             imgId: { type: String, default: '' },

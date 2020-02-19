@@ -322,7 +322,7 @@ module.exports = {
                         user: userResult._id,
                         id: req.body.id,
                     }).then((trainer) => {
-                        res.status(httpStatus.OK).json({ message: 'Trainer created', user: userResult, trainer,trainerid:userResult._id });
+                        res.status(httpStatus.OK).json({ message: 'Trainer created', user: userResult, trainer,trainerid:trainer._id });
 
                     })
                 }
@@ -678,6 +678,31 @@ module.exports = {
         )
             .then((gym) => {
                 res.status(httpStatus.OK).json({ message: 'Finish Gym', gym });
+            }
+            )
+            .catch(err => {
+                res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ message: err });
+            });
+
+    },
+    // Updating Trainers
+    async FinishTrainer(req, res) {
+        console.log(req.body);
+
+
+        Trainer.updateMany(
+            {
+
+                _id: req.body.id,
+
+            }, {
+            terms: "agree"
+        }
+        )
+            .then((trainer) => {
+                res.status(httpStatus.OK).json({ message: 'Finish Trainer', trainer });
             }
             )
             .catch(err => {

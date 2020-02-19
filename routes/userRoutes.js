@@ -33,6 +33,7 @@ router.post('/creategymprofile', AuthHelper.VerifyToken, UserCtrl.CreateGymProfi
 // update gym profile
 router.post('/updategymprofile/:id', AuthHelper.VerifyToken, UserCtrl.UpdateGymProfile);
 router.post('/finishgym', AuthHelper.VerifyToken, UserCtrl.FinishGym);
+router.post('/finishtrainer', AuthHelper.VerifyToken, UserCtrl.FinishTrainer);
 // Updating Gym Working Timings
 router.post('/updategymworkinghours', AuthHelper.VerifyToken, UserCtrl.UpdateGymWorkingHours);
 // Updating Trainer Working Timings
