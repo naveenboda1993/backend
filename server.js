@@ -3,6 +3,7 @@ const mongoose= require('mongoose');
 const cookieParser = require ('cookie-parser');
 const cors =require('cors');
 const _= require('lodash');
+const PORT = process.env.PORT || 5000
 // const logger = require('morgan');
 
 const app =express(); //instance of express
@@ -58,6 +59,6 @@ mongoose.connect( dbConfig.url, {
  app.use('/api/chat', image);
  
 
- server.listen(3000, () =>{
-     console.log('Running on port 3000');
+ server.listen(PORT, () =>{
+     console.log(`Running on new port ${ PORT }`);
  });
