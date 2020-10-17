@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const _ = require('lodash');
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3000
 // const logger = require('morgan');
 
 const app = express(); //instance of express
@@ -52,7 +52,7 @@ mongoose.connect(dbConfig.url, {
 
 
 
-app.use('/api/chat', auth);
+app.use('/api', auth);
 app.use('/api/chat', posts);
 app.use('/api/chat', users);
 app.use('/api/chat', friends);

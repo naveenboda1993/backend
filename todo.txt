@@ -1,0 +1,9 @@
+git push heroku manjith-dev:master
+
+heroku logs --tail
+
+heroku ps
+
+heroku run bash
+
+heroku local web
