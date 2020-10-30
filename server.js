@@ -58,7 +58,7 @@ app.use('/api/chat', message);
 app.use('/api/chat', image);
 
 app.get("/",(req,res)=>{
-    res.send("Hello HMS BACKEND")
+    res.send("Hello HMS BACKEND Verion 30-11-2020")
 })
 server.listen(PORT, () => {
     console.log(`Running on new port ${PORT}`);
