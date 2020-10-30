@@ -7,3 +7,7 @@ heroku ps
 heroku run bash
 
 heroku local web
+
+
+admin@demo.com
+1234

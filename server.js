@@ -27,13 +27,13 @@ const friends = require('./routes/friendsRoutes.js');
 const message = require('./routes/messageRoutes.js');
 const image = require('./routes/imageRoutes.js');
 
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Credentials', 'true');
-//     res.header('Access-Control-Allow-Methods', 'GET','POST','DELETE','PUT','OPTIONS');
-//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-//     next();
-// });
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET','POST','DELETE','PUT','OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    next();
+});
 
 app.use(express.json({ limit: '50mb' })); //limit for exp images
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -46,8 +46,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.url, {
     useNewUrlParser: true, useUnifiedTopology: true
 });
-
-
 
 
 

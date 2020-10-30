@@ -10,6 +10,7 @@ const AuthCtrl = require('../controllers/auth.js');
 // router.get('/testing', AuthCtrl.Testing);
  //cu is method which will be in auth
 router.post('/register', AuthCtrl.CreateUser); //cu is method which will be in auth
+router.post('/passwordchange', AuthCtrl.Passwordchange); //cu is method which will be in auth
 router.post('/login', AuthCtrl.LoginUser);
 
 

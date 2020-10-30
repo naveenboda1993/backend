@@ -14,30 +14,30 @@ module.exports = {
     // },
     async CreateUser(req, res) {
         console.log(req.body);
-        return res
-            .status(HttpStatus.CONFLICT)
-            .json({ data: req.body, message: 'Email already exist' });
+        // return res
+        //     .status(HttpStatus.CONFLICT)
+        //     .json({ data: req.body, message: 'Email already exist' });
 
-        // const schema = Joi.object().keys({
-        //     username: Joi.string()
-        //         .min(3)
-        //         .max(30)
-        //         .required(),
-        //     email: Joi.string()
-        //         .email()
-        //         .required(),
-        //     role: Joi.string()
-        //         .min(3)
-        //         .max(30)
-        //         .required(),
-        //     phonenumber: Joi.string().min(3)
-        //         .max(30).required(),
-        //     password: Joi.string()
-        //         .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
-        // });
+        const schema = Joi.object().keys({
+            username: Joi.string()
+                .min(3)
+                .max(30)
+                .required(),
+            email: Joi.string()
+                .email()
+                .required(),
+            // role: Joi.string()
+            //     .min(3)
+            //     .max(30)
+            //     .required(),
+            // phonenumber: Joi.string().min(3)
+            //     .max(30).required(),
+            password: Joi.string()
+                .pattern(/^[a-zA-Z0-9]{3,30}$/).required()
+        });
 
 
-        // const { error, value } = schema.validate(req.body);
+        const { error, value } = schema.validate(req.body);
         // // console.log(value);
         // if (error && error.details) {
         //     return res
@@ -69,44 +69,60 @@ module.exports = {
 
         // }
 
-        // return bcrypt.hash(value.password, 10, (err, hash) => {
-        //     if (err) {
-        //         return res
-        //             .status(HttpStatus.BAD_REQUEST)
-        //             .json({ message: 'ERROR HASHING PASSWORD' });
-        //     }//if there is any error in password hashing return that error, if not exceute the below
-        //     const body = {
-        //         username: Helpers.firstUppercase(value.username),
-        //         email: Helpers.lowerCase(value.email),
-        //         phonenumber:req.body.phonenumber,
-        //         role: req.body.role,
-        //         password: hash
-        //     };//new object is created, created all those mentioned 
-        //     User.create(body)//mongoose create method
-        //         .then((user) => {
-        //             const token = jwt.sign({ data: user }, dbConfig.secret, {
-        //                 expiresIn: '9h'
-        //             });//user object
-        //             res.cookie('auth', token);
-        //             res
-        //                 .status(HttpStatus.CREATED)
-        //                 .json({ message: 'user created successfully', user, token });
-        //         }) //SAVE IN THE DATABASE
-        //         .catch(err => {
-        //             res
-        //                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        //                 .json({ message: err });
-        //         });
-        // });
+        return bcrypt.hash(value.password, 10, (err, hash) => {
+            if (err) {
+                return res
+                    .status(HttpStatus.BAD_REQUEST)
+                    .json({ message: 'ERROR HASHING PASSWORD' });
+            }//if there is any error in password hashing return that error, if not exceute the below
+            const body = {
+                username: Helpers.firstUppercase(value.username),
+                email: Helpers.lowerCase(value.email),
+                phonenumber:req.body.phone,
+                password: hash
+            };//new object is created, created all those mentioned 
+            User.create(body)//mongoose create method
+                .then((user) => {
+                    const token = jwt.sign({ data: user }, dbConfig.secret, {
+                        expiresIn: '9h'
+                    });//user object
+                    res.cookie('auth', token);
+                    res
+                        .status(HttpStatus.CREATED)
+                        .json({ message: 'user created successfully', user, token });
+                }) //SAVE IN THE DATABASE
+                .catch(err => {
+                    res
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ message: err });
+                });
+        });
+
+    },
+    async Passwordchange(req,res){
+        console.log(req.body)
+        return bcrypt.hash(req.body.password, 10, (err, hash) => {
+            if (err) {
+                return res
+                    .status(HttpStatus.BAD_REQUEST)
+                    .json({ message: 'ERROR HASHING PASSWORD' });
+            }//if there is any error in password hashing return that error, if not exceute the below
+           
+                    res
+                        .status(HttpStatus.CREATED)
+                        .json({ message: 'user created successfully', hash });
+              
+        });
 
     },
     async LoginUser(req, res) {
-        if (!req.body.username || !req.body.password) {
+        console.log(req.body)
+        if (!req.body.email || !req.body.password) {
             return res
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .json({ message: 'No empty fields allowed' });
         }
-        await User.findOne({ username: req.body.username }).then(user => {
+        await User.findOne({ email: req.body.email }).then(user => {
             if (!user) {
                 return res
                     .status(HttpStatus.NOT_FOUND)
@@ -118,13 +134,13 @@ module.exports = {
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .json({ message: 'Password is not matched' });
                 }
-                const token = jwt.sign({ data: user }, dbConfig.secret, {
+                const accessToken = jwt.sign({ data: user }, dbConfig.secret, {
                     expiresIn: '9h'
                 });
-                res.cookie('auth', token);
+                res.cookie('auth', accessToken);
                 return res
                     .status(HttpStatus.OK)
-                    .json({ message: 'Login successful', user, token });
+                    .json({ message: 'Login successful', user, accessToken: accessToken });
             });
         })
             .catch(err => {
